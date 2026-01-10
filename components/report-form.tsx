@@ -110,6 +110,14 @@ export function ReportForm() {
           <Label htmlFor="city">Woonplaats (optioneel)</Label>
           <Input id="city" name="city" placeholder="Je woonplaats" />
         </div>
+
+        <div className="space-y-2">
+          <Label htmlFor="socialProfileUrl">Social media profiel (optioneel)</Label>
+          <Input id="socialProfileUrl" name="socialProfileUrl" type="url" placeholder="https://facebook.com/..." />
+          <p className="text-xs text-muted-foreground">
+            Link naar relevante social media (bijv. Facebook, Marktplaats)
+          </p>
+        </div>
       </div>
 
       <div className="space-y-4 rounded-lg border border-border bg-card p-6">
