@@ -1,0 +1,9 @@
+# Database
+DATABASE_URL=your_neon_database_url_here
+
+# Admin Password
+ADMIN_PASSWORD=your_secure_admin_password_here
+
+# Email (optional)
+RESEND_API_KEY=your_resend_api_key_here
+RESEND_FROM_EMAIL=noreply@yourdomain.com

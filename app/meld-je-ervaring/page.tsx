@@ -17,7 +17,7 @@ export default function MeldJePage() {
           </p>
         </div>
 
-        <div className="mb-8 rounded-lg border border-border bg-card p-4">
+        <div className="mb-8 rounded-lg border border-border bg-card/60 glass-card p-4">
           <h2 className="mb-2 font-semibold text-foreground">Wat we NIET vragen</h2>
           <ul className="space-y-1 text-sm text-muted-foreground">
             <li>• BSN of identiteitsbewijs</li>

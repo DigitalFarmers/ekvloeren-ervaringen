@@ -22,6 +22,7 @@ export async function submitReport(formData: FormData): Promise<SubmitReportResu
       description: formData.get("description") as string,
       socialProfileUrl: formData.get("socialProfileUrl") as string,
       consent: formData.get("consent") === "true",
+      linkToOthers: formData.get("linkToOthers") === "true",
     }
 
     const validation = reportSchema.safeParse(rawData)
@@ -42,7 +43,7 @@ export async function submitReport(formData: FormData): Promise<SubmitReportResu
     const result = await sql`
       INSERT INTO reports (
         name, contact, city, date_of_incident, amount, payment_method,
-        description, social_profile_url, consent, status, internal_notes
+        description, social_profile_url, consent, link_to_others, status, internal_notes
       ) VALUES (
         ${data.name || null},
         ${data.contact},
@@ -53,6 +54,7 @@ export async function submitReport(formData: FormData): Promise<SubmitReportResu
         ${data.description},
         ${data.socialProfileUrl || null},
         ${data.consent},
+        ${data.linkToOthers || false},
         ${initialStatus},
         ${moderationCheck.reason ? `Auto-flag: ${moderationCheck.reason}` : null}
       )

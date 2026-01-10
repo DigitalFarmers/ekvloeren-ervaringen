@@ -19,6 +19,7 @@ export interface Report {
   description: string
   social_profile_url: string | null
   consent: boolean
+  link_to_others: boolean
   link_to_report_id: string | null
   internal_notes: string | null
 }

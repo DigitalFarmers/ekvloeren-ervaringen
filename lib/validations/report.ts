@@ -22,6 +22,7 @@ export const reportSchema = z.object({
   consent: z.boolean().refine((val) => val === true, {
     message: "Je moet akkoord gaan met de voorwaarden",
   }),
+  linkToOthers: z.boolean().optional(),
 })
 
 export const reportFormSchema = reportSchema

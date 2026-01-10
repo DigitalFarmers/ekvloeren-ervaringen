@@ -17,6 +17,7 @@ export function ReportForm() {
   const [result, setResult] = useState<SubmitReportResult | null>(null)
   const [files, setFiles] = useState<File[]>([])
   const [consent, setConsent] = useState(false)
+  const [linkToOthers, setLinkToOthers] = useState(false)
   const fileInputRef = useRef<HTMLInputElement>(null)
   const formRef = useRef<HTMLFormElement>(null)
 
@@ -37,6 +38,7 @@ export function ReportForm() {
 
     const formData = new FormData(e.currentTarget)
     formData.set("consent", consent.toString())
+    formData.set("linkToOthers", linkToOthers.toString())
 
     // Add files to formData
     files.forEach((file) => {
@@ -73,6 +75,7 @@ export function ReportForm() {
             setResult(null)
             setFiles([])
             setConsent(false)
+            setLinkToOthers(false)
             formRef.current?.reset()
           }}
         >
@@ -90,7 +93,7 @@ export function ReportForm() {
         </div>
       )}
 
-      <div className="space-y-4 rounded-lg border border-border bg-card p-6">
+      <div className="space-y-4 rounded-lg border border-border bg-card/60 glass-card p-6">
         <h3 className="font-semibold text-foreground">Contactgegevens</h3>
 
         <div className="space-y-2">
@@ -120,7 +123,7 @@ export function ReportForm() {
         </div>
       </div>
 
-      <div className="space-y-4 rounded-lg border border-border bg-card p-6">
+      <div className="space-y-4 rounded-lg border border-border bg-card/60 glass-card p-6">
         <h3 className="font-semibold text-foreground">Details van het incident</h3>
 
         <div className="space-y-2">
@@ -169,7 +172,7 @@ export function ReportForm() {
         </div>
       </div>
 
-      <div className="space-y-4 rounded-lg border border-border bg-card p-6">
+      <div className="space-y-4 rounded-lg border border-border bg-card/60 glass-card p-6">
         <h3 className="font-semibold text-foreground">Bewijsmateriaal</h3>
         <p className="text-sm text-muted-foreground">
           Upload screenshots, PDF&apos;s of foto&apos;s ter ondersteuning van je melding.
@@ -211,7 +214,7 @@ export function ReportForm() {
         )}
       </div>
 
-      <div className="space-y-4 rounded-lg border border-border bg-card p-6">
+      <div className="space-y-4 rounded-lg border border-border bg-card/60 glass-card p-6">
         <div className="flex items-start space-x-3">
           <Checkbox id="consent" checked={consent} onCheckedChange={(checked) => setConsent(checked === true)} />
           <div className="space-y-1">
@@ -221,6 +224,18 @@ export function ReportForm() {
             <p className="text-xs text-muted-foreground">
               Ik geef toestemming om contact met mij op te nemen en bevestig dat de informatie naar waarheid is
               ingevuld.
+            </p>
+          </div>
+        </div>
+
+        <div className="flex items-start space-x-3">
+          <Checkbox id="linkToOthers" checked={linkToOthers} onCheckedChange={(checked) => setLinkToOthers(checked === true)} />
+          <div className="space-y-1">
+            <Label htmlFor="linkToOthers" className="cursor-pointer font-normal">
+              Koppel mij (privé) aan andere melders
+            </Label>
+            <p className="text-xs text-muted-foreground">
+              Optioneel. Als er vergelijkbare meldingen zijn, kunnen we je anoniem met elkaar in contact brengen.
             </p>
           </div>
         </div>
