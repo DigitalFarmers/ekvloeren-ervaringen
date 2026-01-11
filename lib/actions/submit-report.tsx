@@ -157,6 +157,31 @@ export async function submitReport(formData: FormData): Promise<SubmitReportResu
   }
 }
 
+export async function createManualReport(data: any): Promise<void> {
+  try {
+    await sql`
+      INSERT INTO reports (
+        name, contact, city, date_of_incident, amount, 
+        description, status, internal_notes
+      ) VALUES (
+        ${data.name || null},
+        ${data.contact},
+        ${data.city || null},
+        ${data.dateOfIncident || null},
+        ${data.amount ? Number.parseFloat(data.amount) : null},
+        ${data.description},
+        ${data.status},
+        'Handmatig toegevoegd via dashboard'
+      )
+    `
+    revalidatePath("/admin")
+    revalidatePath("/")
+  } catch (error) {
+    console.error("Error creating manual report:", error)
+    throw error
+  }
+}
+
 export async function getReports(status: ReportStatus | "all" = "all", query = ""): Promise<any[]> {
   try {
     let reports
@@ -315,4 +340,3 @@ export async function getPublicTotalDamage(): Promise<number> {
   const [approved, adjustment] = await Promise.all([getApprovedTotalDamage(), getTotalDamageAdjustment()])
   return approved + adjustment
 }
-
