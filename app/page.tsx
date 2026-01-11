@@ -235,21 +235,21 @@ export default function HomePage() {
       {/* Journalist / Laywer CTA */}
       <section className="py-20 border-t border-border/50">
         <div className="mx-auto max-w-4xl px-4 sm:px-6 lg:px-8 text-center">
-          <h2 className="text-2xl font-bold text-blue-600 mb-4">
-            Ben je journalist of advocaat?
+          <h2 className="text-2xl font-bold text-foreground mb-4">
+            Ben je <span className="text-blue-600">journalist</span> of <span className="text-blue-600">advocaat</span>?
           </h2>
           <p className="text-lg text-muted-foreground mb-8 max-w-2xl mx-auto">
             We hebben een groeiend dossier van gedupeerden en gedocumenteerde patronen.
             Neem contact op om samen te werken aan gerechtigheid.
           </p>
           <div className="flex justify-center gap-4">
-            <Button asChild variant="outline" size="lg" className="border-blue-200 text-blue-600 hover:bg-blue-50 hover:text-blue-700">
+            <Button asChild variant="outline" size="lg" className="border-border text-foreground hover:text-blue-600 hover:border-blue-600 hover:bg-blue-600/10 transition-colors duration-300">
               <a href="mailto:meld@ekvloeren-ervaringen.nl?subject=Persaanvraag">
                 <Newspaper className="mr-2 h-4 w-4" />
                 Perscontact
               </a>
             </Button>
-            <Button asChild variant="outline" size="lg" className="border-blue-200 text-blue-600 hover:bg-blue-50 hover:text-blue-700">
+            <Button asChild variant="outline" size="lg" className="border-border text-foreground hover:text-blue-600 hover:border-blue-600 hover:bg-blue-600/10 transition-colors duration-300">
               <a href="mailto:meld@ekvloeren-ervaringen.nl?subject=Juridisch">
                 <Scale className="mr-2 h-4 w-4" />
                 Juridisch overleg
@@ -310,7 +310,7 @@ export default function HomePage() {
               rel="noopener noreferrer"
               className="group text-white transition-colors text-lg font-medium inline-flex items-center gap-1 mb-4"
             >
-              <span className="group-hover:text-[#E68404] transition-colors">Digital Farmers</span>
+              <span className="group-hover:text-[#E68404] transition-colors">DigitalFarmers.be</span>
               <span className="text-muted-foreground mx-1">|</span>
               <span>Start small, <span className="font-bold">GROW BIG</span></span>
               <span className="transform transition-transform duration-300 group-hover:scale-150 inline-block ml-1">🌱</span>
