@@ -17,7 +17,6 @@ import {
 import { cn } from "@/lib/utils"
 
 const navigation = [
-    { name: "Home", href: "/" },
     { name: "Melden", href: "/meld-je-ervaring" },
     { name: "Hoe werkt het", href: "/#hoe-werkt-het" },
 ]
