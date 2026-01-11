@@ -27,10 +27,10 @@ export default function HomePage() {
         <div className="relative mx-auto max-w-6xl px-4 py-24 sm:px-6 lg:px-8">
           <div className="text-center">
             <h1 className="text-4xl font-bold tracking-tight text-foreground sm:text-6xl lg:text-7xl animate-fade-in-up">
-              Geld kwijt aan EK Vloeren?<br />Je staat niet alleen.
+              Geld kwijt aan <span className="text-red-600">EK Vloeren</span>?<br />Je staat niet alleen.
             </h1>
             <p className="mx-auto mt-6 max-w-2xl text-lg text-muted-foreground sm:text-xl animate-fade-in-up animate-delay-100">
-              Meld je ervaring met <span className="text-red-600 font-bold animate-pulse text-xl inline-block transform hover:scale-105 transition-transform duration-300">EK Vloeren (Erwin Kooistra)</span>.
+              Meld je ervaring met <span className="font-semibold text-foreground">EK Vloeren (Erwin Kooistra)</span>.
               We verzamelen meldingen gestructureerd en vertrouwelijk,
               zodat patronen zichtbaar worden en anderen niet dezelfde fout maken.
             </p>
