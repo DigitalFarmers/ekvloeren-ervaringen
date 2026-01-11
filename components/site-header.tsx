@@ -20,7 +20,6 @@ const navigation = [
     { name: "Home", href: "/" },
     { name: "Melden", href: "/meld-je-ervaring" },
     { name: "Hoe werkt het", href: "/#hoe-werkt-het" },
-    { name: "Admin", href: "/admin" },
 ]
 
 export function SiteHeader() {
@@ -32,73 +31,74 @@ export function SiteHeader() {
             <div className="container mx-auto flex h-16 max-w-6xl items-center justify-between px-4 sm:px-6 lg:px-8">
                 <div className="flex items-center gap-2">
                     <Link href="/" className="flex items-center space-x-2">
-                        <Shield className="h-6 w-6 text-primary" />
-                        <span className="hidden font-bold sm:inline-block">EK VVloeren Ervaringen</span>
+                        <Shield className="h-6 w-6 text-red-600" />
+                        <span className="hidden font-bold sm:inline-block">EK Vloeren Ervaringen</span>
                         <span className="font-bold sm:hidden">EKVE</span>
                     </Link>
                 </div>
-
-                {/* Desktop Navigation */}
-                <nav className="hidden items-center gap-6 md:flex">
-                    {navigation.map((item) => (
-                        <Link
-                            key={item.href}
-                            href={item.href}
-                            className={cn(
-                                "text-sm font-medium transition-colors hover:text-primary",
-                                pathname === item.href
-                                    ? "text-foreground"
-                                    : "text-muted-foreground"
-                            )}
-                        >
-                            {item.name}
-                        </Link>
-                    ))}
-                    <ThemeToggle />
-                </nav>
-
-                {/* Mobile Navigation */}
-                <div className="flex items-center gap-4 md:hidden">
-                    <ThemeToggle />
-                    <Sheet open={open} onOpenChange={setOpen}>
-                        <SheetTrigger asChild>
-                            <Button variant="ghost" size="icon" className="h-9 w-9">
-                                <Menu className="h-5 w-5" />
-                                <span className="sr-only">Toggle menu</span>
-                            </Button>
-                        </SheetTrigger>
-                        <SheetContent side="right">
-                            <SheetHeader className="text-left">
-                                <SheetTitle>Menu</SheetTitle>
-                            </SheetHeader>
-                            <div className="mt-8 flex flex-col gap-4">
-                                {navigation.map((item) => (
-                                    <Link
-                                        key={item.href}
-                                        href={item.href}
-                                        onClick={() => setOpen(false)}
-                                        className={cn(
-                                            "text-lg font-medium transition-colors hover:text-primary",
-                                            pathname === item.href
-                                                ? "text-foreground"
-                                                : "text-muted-foreground"
-                                        )}
-                                    >
-                                        {item.name}
-                                    </Link>
-                                ))}
-                            </div>
-                            <div className="mt-8 pt-8 border-t border-border">
-                                <Button className="w-full" size="lg" asChild onClick={() => setOpen(false)}>
-                                    <Link href="/meld-je-ervaring">
-                                        Meld je ervaring
-                                    </Link>
-                                </Button>
-                            </div>
-                        </SheetContent>
-                    </Sheet>
-                </div>
             </div>
-        </header>
+
+            {/* Desktop Navigation */}
+            <nav className="hidden items-center gap-6 md:flex">
+                {navigation.map((item) => (
+                    <Link
+                        key={item.href}
+                        href={item.href}
+                        className={cn(
+                            "text-sm font-medium transition-colors hover:text-primary",
+                            pathname === item.href
+                                ? "text-foreground"
+                                : "text-muted-foreground"
+                        )}
+                    >
+                        {item.name}
+                    </Link>
+                ))}
+                <ThemeToggle />
+            </nav>
+
+            {/* Mobile Navigation */}
+            <div className="flex items-center gap-4 md:hidden">
+                <ThemeToggle />
+                <Sheet open={open} onOpenChange={setOpen}>
+                    <SheetTrigger asChild>
+                        <Button variant="ghost" size="icon" className="h-9 w-9">
+                            <Menu className="h-5 w-5" />
+                            <span className="sr-only">Toggle menu</span>
+                        </Button>
+                    </SheetTrigger>
+                    <SheetContent side="right">
+                        <SheetHeader className="text-left">
+                            <SheetTitle>Menu</SheetTitle>
+                        </SheetHeader>
+                        <div className="mt-8 flex flex-col gap-4">
+                            {navigation.map((item) => (
+                                <Link
+                                    key={item.href}
+                                    href={item.href}
+                                    onClick={() => setOpen(false)}
+                                    className={cn(
+                                        "text-lg font-medium transition-colors hover:text-primary",
+                                        pathname === item.href
+                                            ? "text-foreground"
+                                            : "text-muted-foreground"
+                                    )}
+                                >
+                                    {item.name}
+                                </Link>
+                            ))}
+                        </div>
+                        <div className="mt-8 pt-8 border-t border-border">
+                            <Button className="w-full" size="lg" asChild onClick={() => setOpen(false)}>
+                                <Link href="/meld-je-ervaring">
+                                    Meld je ervaring
+                                </Link>
+                            </Button>
+                        </div>
+                    </SheetContent>
+                </Sheet>
+            </div>
+        </div>
+        </header >
     )
 }

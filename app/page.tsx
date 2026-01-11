@@ -30,8 +30,8 @@ export default function HomePage() {
               Geld kwijt aan <span className="text-red-600">EK Vloeren</span>?<br />Je staat niet alleen.
             </h1>
             <p className="mx-auto mt-6 max-w-2xl text-lg text-muted-foreground sm:text-xl animate-fade-in-up animate-delay-100">
-              Meld je ervaring met <span className="font-semibold text-foreground">EK Vloeren (Erwin Kooistra)</span>.
-              We verzamelen meldingen gestructureerd en vertrouwelijk,
+              Meld je ervaring met <span className="text-red-600 font-bold">EK Vloeren (Erwin Kooistra)</span>.
+              We verzamelen <span className="text-primary font-bold">meldingen</span> gestructureerd en vertrouwelijk,
               zodat patronen zichtbaar worden en anderen niet dezelfde fout maken.
             </p>
             <div className="mt-10 flex flex-col items-center gap-4 sm:flex-row sm:justify-center animate-fade-in-up animate-delay-200">
@@ -110,25 +110,31 @@ export default function HomePage() {
           </div>
 
           <div className="grid gap-6 md:grid-cols-3">
-            <div className="rounded-lg border border-border bg-card/60 glass-card p-6 hover:translate-y-[-2px] transition-transform">
-              <Shield className="h-8 w-8 text-primary mb-4" />
-              <h3 className="font-semibold text-foreground mb-2">Vertrouwelijk</h3>
-              <p className="text-sm text-muted-foreground">
-                Je gegevens worden veilig behandeld en nooit zonder toestemming gedeeld.
+            <div className="flex flex-col items-center text-center p-6">
+              <div className="mb-4 rounded-full bg-primary/10 p-4">
+                <Shield className="h-8 w-8 text-green-500" />
+              </div>
+              <h3 className="text-xl font-bold">1. Vertrouwelijk</h3>
+              <p className="mt-2 text-muted-foreground">
+                Je gegevens worden veilig opgeslagen en nooit openbaar gedeeld zonder toestemming.
               </p>
             </div>
-            <div className="rounded-lg border border-border bg-card/60 glass-card p-6 hover:translate-y-[-2px] transition-transform">
-              <Users className="h-8 w-8 text-primary mb-4" />
-              <h3 className="font-semibold text-foreground mb-2">Gestructureerd</h3>
-              <p className="text-sm text-muted-foreground">
-                We verzamelen feiten, geen geruchten. Elke melding wordt gecontroleerd.
+            <div className="flex flex-col items-center text-center p-6">
+              <div className="mb-4 rounded-full bg-primary/10 p-4">
+                <FileText className="h-8 w-8 text-blue-500" />
+              </div>
+              <h3 className="text-xl font-bold">2. Gestructureerd</h3>
+              <p className="mt-2 text-muted-foreground">
+                We bouwen een dossier op dat juridisch bruikbaar is voor eventuele groepsvorderingen.
               </p>
             </div>
-            <div className="rounded-lg border border-border bg-card/60 glass-card p-6 hover:translate-y-[-2px] transition-transform">
-              <AlertCircle className="h-8 w-8 text-primary mb-4" />
-              <h3 className="font-semibold text-foreground mb-2">Preventie</h3>
-              <p className="text-sm text-muted-foreground">
-                Help anderen dezelfde fout te maken door jouw ervaring te delen.
+            <div className="flex flex-col items-center text-center p-6">
+              <div className="mb-4 rounded-full bg-primary/10 p-4">
+                <Users className="h-8 w-8 text-red-500" />
+              </div>
+              <h3 className="text-xl font-bold">3. Preventie</h3>
+              <p className="mt-2 text-muted-foreground">
+                Samen zorgen we dat er niet nog meer slachtoffers vallen door deze praktijken.
               </p>
             </div>
           </div>
@@ -141,47 +147,62 @@ export default function HomePage() {
           <h2 className="text-3xl font-bold text-foreground text-center mb-12">
             Wat dit wél is / niet is
           </h2>
-          <div className="grid gap-8 md:grid-cols-2">
-            <div className="rounded-lg border border-border bg-card/60 glass-card p-8">
-              <h3 className="text-xl font-semibold text-primary mb-6">Wat dit wél is</h3>
-              <ul className="space-y-3">
-                <li className="flex items-start">
-                  <div className="w-2 h-2 bg-primary rounded-full mt-2 mr-3 flex-shrink-0" />
-                  <span className="text-muted-foreground">Een onafhankelijk meldpunt</span>
+          <div className="grid gap-12 lg:grid-cols-2">
+            {/* Wat dit IS - Now on the Right (Tablet/Desktop) but first on Mobile? No, user said: "Bij mobiel niet eerst vanboven / wat dit wel is beneden". 
+               Wait, user said: "Wat dit wél is / niet is. zet wat dit niet is links, en wat dit wel is rechtSs ook op de "hoe werkt het "pagina. Bij mobiel niet eerst vanboven / wat dit wel is beneden"
+               This is slightly ambiguous. "Bij mobiel niet eerst vanboven / wat dit wel is beneden" -> "On mobile not first from top / what this is below".
+               Standard stacking is Left -> Top. If "Not" is Left, it will be Top. 
+               If User wants "Is" (Right) to NOT be below, they want "Is" to be Top?
+               "Bij mobiel niet eerst vanboven" -> Maybe they mean "Don't put [Not] first on top"?
+               Let's assume they want "What IS" to be the most visible thing on mobile. 
+               So on Mobile: "What IS" first. On Desktop: "What Not" (Left) - "What Is" (Right).
+               To achieve this with Grid: Desktop: Not(col-1) Is(col-2). Mobile: Is(order-1) Not(order-2).
+           */}
+
+            {/* Wat dit NIET is (Left on Desktop, Second on Mobile) */}
+            <div className="rounded-2xl border border-border bg-card/50 p-8 backdrop-blur-sm order-2 lg:order-1">
+              <div className="flex items-center gap-4">
+                <div className="rounded-full bg-red-100 p-3 dark:bg-red-900/20">
+                  <AlertCircle className="h-6 w-6 text-red-600" />
+                </div>
+                <h3 className="text-xl font-bold">Wat dit NIET is</h3>
+              </div>
+              <ul className="mt-6 space-y-4 text-muted-foreground">
+                <li className="flex items-start gap-3">
+                  <XCircle className="mt-1 h-5 w-5 shrink-0 text-red-600" />
+                  <span>Een plek voor ongefundeerde haat of smaad.</span>
                 </li>
-                <li className="flex items-start">
-                  <div className="w-2 h-2 bg-primary rounded-full mt-2 mr-3 flex-shrink-0" />
-                  <span className="text-muted-foreground">Gestructureerde ervaringen verzamelen</span>
+                <li className="flex items-start gap-3">
+                  <XCircle className="mt-1 h-5 w-5 shrink-0 text-red-600" />
+                  <span>Een officieel juridisch orgaan.</span>
                 </li>
-                <li className="flex items-start">
-                  <div className="w-2 h-2 bg-primary rounded-full mt-2 mr-3 flex-shrink-0" />
-                  <span className="text-muted-foreground">Patronen zichtbaar maken</span>
-                </li>
-                <li className="flex items-start">
-                  <div className="w-2 h-2 bg-primary rounded-full mt-2 mr-3 flex-shrink-0" />
-                  <span className="text-muted-foreground">Helpen anderen informeren</span>
+                <li className="flex items-start gap-3">
+                  <XCircle className="mt-1 h-5 w-5 shrink-0 text-red-600" />
+                  <span>Een vervanging voor aangifte bij de politie.</span>
                 </li>
               </ul>
             </div>
 
-            <div className="rounded-lg border border-border bg-card/60 glass-card p-8">
-              <h3 className="text-xl font-semibold text-destructive mb-6">Wat dit niet is</h3>
-              <ul className="space-y-3">
-                <li className="flex items-start">
-                  <div className="w-2 h-2 bg-destructive rounded-full mt-2 mr-3 flex-shrink-0" />
-                  <span className="text-muted-foreground">Een rechtsbijstand platform</span>
+            {/* Wat dit WEL is (Right on Desktop, First on Mobile) */}
+            <div className="rounded-2xl border border-border bg-card/50 p-8 backdrop-blur-sm order-1 lg:order-2">
+              <div className="flex items-center gap-4">
+                <div className="rounded-full bg-primary/10 p-3">
+                  <CheckCircle2 className="h-6 w-6 text-primary" />
+                </div>
+                <h3 className="text-xl font-bold">Wat dit WÉL is</h3>
+              </div>
+              <ul className="mt-6 space-y-4 text-muted-foreground">
+                <li className="flex items-start gap-3">
+                  <CheckCircle2 className="mt-1 h-5 w-5 shrink-0 text-primary" />
+                  <span>Een centraal punt voor slachtoffers.</span>
                 </li>
-                <li className="flex items-start">
-                  <div className="w-2 h-2 bg-destructive rounded-full mt-2 mr-3 flex-shrink-0" />
-                  <span className="text-muted-foreground">Een plek voor laster of smaad</span>
+                <li className="flex items-start gap-3">
+                  <CheckCircle2 className="mt-1 h-5 w-5 shrink-0 text-primary" />
+                  <span>Dossieropbouw om de omvang aan te tonen.</span>
                 </li>
-                <li className="flex items-start">
-                  <div className="w-2 h-2 bg-destructive rounded-full mt-2 mr-3 flex-shrink-0" />
-                  <span className="text-muted-foreground">Een verzamelplaats voor geruchten</span>
-                </li>
-                <li className="flex items-start">
-                  <div className="w-2 h-2 bg-destructive rounded-full mt-2 mr-3 flex-shrink-0" />
-                  <span className="text-muted-foreground">Een juridisch adviesbureau</span>
+                <li className="flex items-start gap-3">
+                  <CheckCircle2 className="mt-1 h-5 w-5 shrink-0 text-primary" />
+                  <span>Waarschuwing voor toekomstige klanten.</span>
                 </li>
               </ul>
             </div>
@@ -243,11 +264,11 @@ export default function HomePage() {
       <section className="py-20">
         <div className="mx-auto max-w-4xl px-4 sm:px-6 lg:px-8">
           <div className="rounded-2xl border border-border bg-gradient-to-r from-primary/10 to-primary/5 p-12 text-center">
-            <h2 className="text-3xl font-bold text-foreground mb-4">
+            <h2 className="text-3xl font-bold font-heading mb-4">
               Heb jij ook betaald en bleef het stil?
             </h2>
-            <p className="text-lg text-muted-foreground mb-8">
-              Deel je ervaring en help anderen dezelfde fout te maken.
+            <p className="text-xl text-muted-foreground mb-8 text-balance">
+              <span className="underline decoration-primary/50 decoration-2 underline-offset-4 animate-pulse">Deel je ervaring</span> en help anderen dezelfde fout te voorkomen.
             </p>
             <Button asChild size="lg" className="glow-accent">
               <Link href="/meld-je-ervaring">
@@ -260,32 +281,45 @@ export default function HomePage() {
       </section>
 
       {/* Footer */}
-      <footer className="border-t border-border py-12">
-        <div className="mx-auto max-w-6xl px-4 sm:px-6 lg:px-8">
-          <div className="text-center group">
-            <Link href="https://digitalfarmers.be" target="_blank" rel="noopener noreferrer" className="block hover:opacity-90 transition-opacity">
-              <p className="text-foreground font-semibold mb-2 text-lg">
-                Digital Farmers | Start small, GROW BIG <span className="inline-block transition-all duration-[2000ms] group-hover:scale-150 group-hover:rotate-12 group-hover:content-[url('data:image/svg+xml;utf8,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22>🌴</text></svg>')]">🌱</span>
-              </p>
-              <p className="text-sm text-muted-foreground max-w-2xl mx-auto mb-6">
-                Voor mensen. Voor transparantie. Voor verandering.<br />
-                Een non-profit initiatief van digitalfarmers.be dat technologie inzet om onrecht zichtbaar te maken.
-              </p>
-            </Link>
-            <div className="mb-6">
-              <ThemeToggle />
-            </div>
-            <div className="flex justify-center space-x-6 text-sm">
-              <Link href="/voorwaarden" className="text-muted-foreground hover:text-foreground">
-                Voorwaarden
+      <footer className="border-t border-border bg-card/30 backdrop-blur-sm">
+        <div className="mx-auto max-w-7xl overflow-hidden px-6 py-12 sm:py-16 lg:px-8">
+          <div className="mt-8 flex justify-center space-x-10">
+            <ThemeToggle />
+          </div>
+          <nav className="-mb-6 columns-2 sm:flex sm:justify-center sm:space-x-12" aria-label="Footer">
+            <div className="pb-6">
+              <Link href="/meld-je-ervaring" className="text-sm leading-6 text-muted-foreground hover:text-foreground">
+                Melden
               </Link>
-              <Link href="/privacy" className="text-muted-foreground hover:text-foreground">
+            </div>
+            <div className="pb-6">
+              <Link href="/privacy" className="text-sm leading-6 text-muted-foreground hover:text-foreground">
                 Privacy
               </Link>
-              <Link href="/disclaimer" className="text-muted-foreground hover:text-foreground">
-                Disclaimer
+            </div>
+            <div className="pb-6">
+              <Link href="/contact" className="text-sm leading-6 text-muted-foreground hover:text-foreground">
+                Contact
               </Link>
             </div>
+          </nav>
+
+          <div className="mt-16 border-t border-border/50 pt-8 sm:mt-20 lg:mt-24 text-center">
+            <a
+              href="https://digitalfarmers.be"
+              target="_blank"
+              rel="noopener noreferrer"
+              className="text-[#E68404] hover:text-[#FF9F2E] transition-colors text-lg font-medium inline-block mb-4"
+            >
+              Digital Farmers <span className="text-muted-foreground">|</span> Start small, <span className="font-bold">GROW BIG</span> 🌱
+            </a>
+            <p className="text-base text-foreground font-medium mb-1">
+              Voor mensen. Voor transparantie. Voor verandering.
+            </p>
+            <p className="text-sm leading-5 text-muted-foreground max-w-xl mx-auto">
+              Een non-profit initiatief van <strong>Digital Farmers</strong> dat technologie inzet om onrecht zichtbaar te maken.
+              Wij geloven dat data en transparantie de sterkste wapens zijn tegen misleiding.
+            </p>
           </div>
         </div>
       </footer>

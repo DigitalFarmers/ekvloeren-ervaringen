@@ -26,6 +26,7 @@ import {
   getApprovedCount,
   getCounterAdjustment,
   setCounterAdjustment,
+  createManualReport,
 } from "@/lib/actions/submit-report"
 import {
   FileText,
@@ -45,6 +46,7 @@ import {
   ExternalLink,
   Settings,
   Loader2,
+  Plus,
 } from "lucide-react"
 
 interface ReportWithFiles extends Report {
@@ -75,6 +77,7 @@ export function AdminDashboard() {
   const [showDeleteDialog, setShowDeleteDialog] = useState(false)
   const [showDuplicateDialog, setShowDuplicateDialog] = useState(false)
   const [showSettingsDialog, setShowSettingsDialog] = useState(false)
+  const [showCreateDialog, setShowCreateDialog] = useState(false)
   const [duplicateLinkId, setDuplicateLinkId] = useState("")
   const [approvedCount, setApprovedCount] = useState(0)
   const [counterAdjustment, setCounterAdjustmentState] = useState(0)
@@ -128,6 +131,24 @@ export function AdminDashboard() {
     })
   }
 
+  const handleCreateReport = async (formData: FormData) => {
+    const data = {
+      name: formData.get("name") as string,
+      contact: formData.get("contact") as string,
+      city: formData.get("city") as string,
+      amount: formData.get("amount") as string,
+      dateOfIncident: formData.get("dateOfIncident") as string,
+      description: formData.get("description") as string,
+      status: "approved" as ReportStatus, // Default to approved for manual entry
+    }
+
+    startTransition(async () => {
+      await createManualReport(data)
+      await loadData()
+      setShowCreateDialog(false)
+    })
+  }
+
   const publicCounter = approvedCount + counterAdjustment
 
   return (
@@ -144,6 +165,10 @@ export function AdminDashboard() {
             <Button variant="outline" size="sm" onClick={() => setShowSettingsDialog(true)}>
               <Settings className="mr-2 h-4 w-4" />
               Instellingen
+            </Button>
+            <Button size="sm" onClick={() => setShowCreateDialog(true)}>
+              <Plus className="mr-2 h-4 w-4" />
+              Nieuwe melding
             </Button>
             <AdminLogout />
           </div>
@@ -512,6 +537,59 @@ export function AdminDashboard() {
           </DialogFooter>
         </DialogContent>
       </Dialog>
-    </main>
+    </Dialog>
+      
+      {/* Create Manual Report Dialog */ }
+  <Dialog open={showCreateDialog} onOpenChange={setShowCreateDialog}>
+    <DialogContent>
+      <DialogHeader>
+        <DialogTitle>Nieuwe melding aanmaken</DialogTitle>
+        <DialogDescription>
+          Voer handmatig een melding in die via andere kanalen is binnengekomen.
+        </DialogDescription>
+      </DialogHeader>
+      <form action={handleCreateReport} className="space-y-4">
+        <div className="grid grid-cols-2 gap-4">
+          <div className="space-y-2">
+            <label className="text-sm font-medium">Naam</label>
+            <Input name="name" placeholder="Naam slachtoffer" />
+          </div>
+          <div className="space-y-2">
+            <label className="text-sm font-medium">Contact (Email/Tel)</label>
+            <Input name="contact" placeholder="Email of telefoon" />
+          </div>
+        </div>
+        <div className="grid grid-cols-2 gap-4">
+          <div className="space-y-2">
+            <label className="text-sm font-medium">Stad/Gemeente</label>
+            <Input name="city" placeholder="Plaats" />
+          </div>
+          <div className="space-y-2">
+            <label className="text-sm font-medium">Datum van incident</label>
+            <Input name="dateOfIncident" type="date" />
+          </div>
+        </div>
+        <div className="space-y-2">
+          <label className="text-sm font-medium">Bedrag (€)</label>
+          <Input name="amount" type="number" step="0.01" placeholder="0.00" />
+        </div>
+        <div className="space-y-2">
+          <label className="text-sm font-medium">Beschrijving</label>
+          <Textarea name="description" placeholder="Wat is er gebeurd?" rows={3} />
+        </div>
+
+        <DialogFooter className="mt-4">
+          <Button type="button" variant="outline" onClick={() => setShowCreateDialog(false)}>
+            Annuleren
+          </Button>
+          <Button type="submit" disabled={isPending}>
+            {isPending ? <Loader2 className="mr-2 h-4 w-4 animate-spin" /> : <Plus className="mr-2 h-4 w-4" />}
+            Aanmaken & Goedkeuren
+          </Button>
+        </DialogFooter>
+      </form>
+    </DialogContent>
+  </Dialog>
+    </main >
   )
 }
