@@ -297,6 +297,11 @@ export default function HomePage() {
               </Link>
             </div>
             <div className="pb-6">
+              <Link href="/voorwaarden" className="text-sm leading-6 text-muted-foreground hover:text-foreground">
+                Voorwaarden
+              </Link>
+            </div>
+            <div className="pb-6">
               <Link href="/contact" className="text-sm leading-6 text-muted-foreground hover:text-foreground">
                 Contact
               </Link>
