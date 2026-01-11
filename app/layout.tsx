@@ -3,6 +3,7 @@ import type { Metadata } from "next"
 import { Space_Grotesk, Inter } from "next/font/google"
 import { Analytics } from "@vercel/analytics/next"
 import { ThemeProvider } from "@/components/theme-provider"
+import { SiteHeader } from "@/components/site-header"
 import "./globals.css"
 
 const spaceGrotesk = Space_Grotesk({
@@ -41,14 +42,24 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="nl" suppressHydrationWarning>
-      <body className={`${spaceGrotesk.variable} ${inter.variable} font-body antialiased`}>
+      <body className={`${spaceGrotesk.variable} ${inter.variable} font-body antialiased min-h-screen flex flex-col`}>
         <ThemeProvider
           attribute="class"
           defaultTheme="dark"
           enableSystem
           disableTransitionOnChange
         >
-          {children}
+          <SiteHeader />
+          <div className="flex-1">
+            {children}
+          </div>
+          {/* Mobile Sticky CTA */}
+          <div className="md:hidden fixed bottom-0 left-0 right-0 p-4 bg-background/80 backdrop-blur border-t border-border z-50">
+            <a href="/meld-je-ervaring" className="flex items-center justify-center w-full bg-red-600 text-white font-bold py-3 rounded-lg shadow-lg hover:bg-red-700 transition-colors">
+              Meld nu je ervaring
+            </a>
+          </div>
+          <div className="h-0 md:h-0 pb-20 md:pb-0" /> {/* Spacer for sticky footer */}
           <Analytics />
         </ThemeProvider>
       </body>
