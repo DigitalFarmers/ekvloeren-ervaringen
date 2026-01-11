@@ -19,6 +19,7 @@ export const metadata: Metadata = {
   title: "EK Vloeren Ervaringen | Meld je ervaring",
   description:
     "Een onafhankelijk meldpunt voor ervaringen met EK Vloeren. Deel je ervaring vertrouwelijk en help anderen een geïnformeerde keuze te maken.",
+  keywords: ["EK Vloeren", "Erwin Kooistra", "Opgelicht", "Aanbetaling kwijt", "Ervaringen", "Klachten", "Meldpunt"],
   openGraph: {
     title: "EK Vloeren Ervaringen",
     description: "Meld je ervaring met EK Vloeren. Vertrouwelijk en gestructureerd.",
@@ -30,7 +31,7 @@ export const metadata: Metadata = {
     index: true,
     follow: true,
   },
-    generator: 'v0.app'
+  generator: 'v0.app'
 }
 
 export default function RootLayout({

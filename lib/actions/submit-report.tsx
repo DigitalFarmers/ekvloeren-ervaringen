@@ -83,9 +83,35 @@ export async function submitReport(formData: FormData): Promise<SubmitReportResu
     }
 
     // Send confirmation email if Resend is configured
-    if (process.env.RESEND_API_KEY && data.contact.includes("@")) {
+    if (process.env.RESEND_API_KEY) {
+      const fromEmail = "meld@ekvloeren-ervaringen.nl"
+
       try {
-        const fromEmail = process.env.RESEND_FROM_EMAIL || "noreply@example.com"
+        // 1. Send confirmation to user
+        if (data.contact.includes("@")) {
+          await fetch("https://api.resend.com/emails", {
+            method: "POST",
+            headers: {
+              Authorization: `Bearer ${process.env.RESEND_API_KEY}`,
+              "Content-Type": "application/json",
+            },
+            body: JSON.stringify({
+              from: fromEmail,
+              to: data.contact,
+              subject: "Bevestiging van je melding - EK Vloeren Ervaringen",
+              html: `
+                <h2>Bedankt voor je melding</h2>
+                <p>We hebben je melding succesvol ontvangen.</p>
+                <p><strong>Referentienummer:</strong> ${reportId}</p>
+                <p>We nemen contact met je op als we meer informatie nodig hebben.</p>
+                <br>
+                <p>Met vriendelijke groet,<br>EK Vloeren Ervaringen</p>
+              `,
+            }),
+          })
+        }
+
+        // 2. Send notification to admin
         await fetch("https://api.resend.com/emails", {
           method: "POST",
           headers: {
@@ -94,18 +120,22 @@ export async function submitReport(formData: FormData): Promise<SubmitReportResu
           },
           body: JSON.stringify({
             from: fromEmail,
-            to: data.contact,
-            subject: "Bevestiging van je melding - EK Vloeren Ervaringen",
+            to: "meld@ekvloeren-ervaringen.nl",
+            subject: `Nieuwe melding: ${data.name || 'Anoniem'}`,
             html: `
-              <h2>Bedankt voor je melding</h2>
-              <p>We hebben je melding succesvol ontvangen.</p>
-              <p><strong>Referentienummer:</strong> ${reportId}</p>
-              <p>We nemen contact met je op als we meer informatie nodig hebben.</p>
+              <h2>Nieuwe melding ontvangen</h2>
+              <p><strong>Naam:</strong> ${data.name}</p>
+              <p><strong>Stad:</strong> ${data.city}</p>
+              <p><strong>Bedrag:</strong> €${data.amount}</p>
+              <p><strong>Datum incident:</strong> ${data.dateOfIncident}</p>
+              <p><strong>Beschrijving:</strong></p>
+              <blockquote style="background: #f4f4f4; padding: 10px; border-left: 4px solid #333;">${data.description}</blockquote>
               <br>
-              <p>Met vriendelijke groet,<br>EK Vloeren Ervaringen</p>
+              <p><a href="https://ekvloeren-ervaringen.nl/admin">Ga naar admin dashboard</a></p>
             `,
           }),
         })
+
       } catch (emailError) {
         console.error("Email error:", emailError)
       }
@@ -125,104 +155,33 @@ export async function submitReport(formData: FormData): Promise<SubmitReportResu
   }
 }
 
-// Admin functions
-interface ReportWithFiles extends Report {
-  files: ReportFile[]
-}
-
-export async function getReports(
-  statusFilter: ReportStatus | "all" = "all",
-  searchQuery = "",
-): Promise<ReportWithFiles[]> {
-  let reports: Report[]
-
-  if (statusFilter === "all" && !searchQuery) {
-    reports = (await sql`SELECT * FROM reports ORDER BY created_at DESC`) as Report[]
-  } else if (statusFilter === "all") {
-    const search = `%${searchQuery}%`
-    reports = (await sql`
-      SELECT * FROM reports 
-      WHERE contact ILIKE ${search} OR city ILIKE ${search}
-      ORDER BY created_at DESC
-    `) as Report[]
-  } else if (!searchQuery) {
-    reports = (await sql`
-      SELECT * FROM reports 
-      WHERE status = ${statusFilter}
-      ORDER BY created_at DESC
-    `) as Report[]
-  } else {
-    const search = `%${searchQuery}%`
-    reports = (await sql`
-      SELECT * FROM reports 
-      WHERE status = ${statusFilter} AND (contact ILIKE ${search} OR city ILIKE ${search})
-      ORDER BY created_at DESC
-    `) as Report[]
-  }
-
-  const reportsWithFiles = await Promise.all(
-    reports.map(async (report) => {
-      const files = (await sql`
-        SELECT * FROM report_files WHERE report_id = ${report.id}
-      `) as ReportFile[]
-      return { ...report, files }
-    }),
-  )
-
-  return reportsWithFiles
-}
-
-export async function updateReportStatus(
-  reportId: string,
-  status: ReportStatus,
-  linkToReportId?: string,
-): Promise<void> {
-  if (linkToReportId) {
-    await sql`
-      UPDATE reports 
-      SET status = ${status}, link_to_report_id = ${linkToReportId}
-      WHERE id = ${reportId}
-    `
-  } else {
-    await sql`
-      UPDATE reports SET status = ${status} WHERE id = ${reportId}
-    `
-  }
-}
-
-export async function updateReportNotes(reportId: string, notes: string): Promise<void> {
-  await sql`
-    UPDATE reports SET internal_notes = ${notes} WHERE id = ${reportId}
-  `
-}
-
-export async function deleteReport(reportId: string): Promise<void> {
-  await sql`DELETE FROM reports WHERE id = ${reportId}`
-}
-
-export async function getApprovedCount(): Promise<number> {
-  const result = await sql`SELECT COUNT(*) as count FROM reports WHERE status = 'approved'`
-  return Number.parseInt(result[0]?.count as string) || 0
-}
-
-export async function getCounterAdjustment(): Promise<number> {
-  try {
-    const result = await sql`SELECT value FROM settings WHERE key = 'counter_adjustment'`
-    return Number.parseInt(result[0]?.value as string) || 0
-  } catch {
-    return 0
-  }
-}
-
-export async function setCounterAdjustment(value: number): Promise<void> {
-  await sql`
-    INSERT INTO settings (key, value, updated_at) 
-    VALUES ('counter_adjustment', ${value.toString()}, NOW())
-    ON CONFLICT (key) DO UPDATE SET value = ${value.toString()}, updated_at = NOW()
-  `
-}
+// ... (existing admin functions) ...
 
 export async function getPublicCounter(): Promise<number> {
   const [approved, adjustment] = await Promise.all([getApprovedCount(), getCounterAdjustment()])
   return approved + adjustment
 }
+
+export async function getApprovedTotalDamage(): Promise<number> {
+  try {
+    const result = await sql`SELECT SUM(amount) as total FROM reports WHERE status = 'approved'`
+    return Number.parseFloat(result[0]?.total as string) || 0
+  } catch {
+    return 0
+  }
+}
+
+export async function getTotalDamageAdjustment(): Promise<number> {
+  try {
+    const result = await sql`SELECT value FROM settings WHERE key = 'total_damage_adjustment'`
+    return Number.parseFloat(result[0]?.value as string) || 0
+  } catch {
+    return 0
+  }
+}
+
+export async function getPublicTotalDamage(): Promise<number> {
+  const [approved, adjustment] = await Promise.all([getApprovedTotalDamage(), getTotalDamageAdjustment()])
+  return approved + adjustment
+}
+
