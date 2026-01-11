@@ -2,6 +2,7 @@ import type React from "react"
 import type { Metadata } from "next"
 import { Space_Grotesk, Inter } from "next/font/google"
 import { Analytics } from "@vercel/analytics/next"
+import { GoogleAnalytics } from '@next/third-parties/google'
 import { ThemeProvider } from "@/components/theme-provider"
 import { SiteHeader } from "@/components/site-header"
 import "./globals.css"
@@ -61,6 +62,7 @@ export default function RootLayout({
           </div>
           <div className="h-0 md:h-0 pb-20 md:pb-0" /> {/* Spacer for sticky footer */}
           <Analytics />
+          <GoogleAnalytics gaId={process.env.NEXT_PUBLIC_GOOGLE_ANALYTICS_ID || ""} />
         </ThemeProvider>
       </body>
     </html>
