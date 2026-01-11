@@ -1,6 +1,6 @@
 "use client"
 
-import type React from "react"
+import React from "react"
 
 import { useState, useEffect, useTransition } from "react"
 import type { Report, ReportFile, ReportStatus } from "@/lib/db"
