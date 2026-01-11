@@ -100,12 +100,11 @@ export default function HomePage() {
         <div className="mx-auto max-w-4xl px-4 sm:px-6 lg:px-8">
           <div className="text-center mb-12">
             <h2 className="text-3xl font-bold text-foreground mb-4">
-              Waarom we dit platform hebben gebouwd
+              Waarom dit platform
             </h2>
             <p className="text-lg text-muted-foreground max-w-2xl mx-auto">
-              Te veel mensen betalen vooraf voor vloeren die nooit geleverd worden.
-              Door ervaringen te bundelen, maken we misstanden zichtbaar en helpen we anderen
-              een geïnformeerde keuze te maken.
+              Dit platform bestaat vanwege aanhoudende meldingen over EK Vloeren (Erwin Kooistra).
+              Voorschotten worden gevraagd, maar werkzaamheden blijven uit.
             </p>
           </div>
 
