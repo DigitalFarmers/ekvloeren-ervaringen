@@ -4,7 +4,7 @@ import { Counter } from "@/components/counter"
 import { TotalDamageCounter } from "@/components/total-damage-counter"
 import { Button } from "@/components/ui/button"
 import { ThemeToggle } from "@/components/theme-toggle"
-import { ArrowRight, Shield, Users, AlertCircle, Scale, Newspaper } from "lucide-react"
+import { ArrowRight, Shield, Users, AlertCircle, Scale, Newspaper, FileText, XCircle, CheckCircle2 } from "lucide-react"
 
 export const metadata: Metadata = {
   title: "EK Vloeren Ervaringen | Voorkom de volgende gedupeerde",
