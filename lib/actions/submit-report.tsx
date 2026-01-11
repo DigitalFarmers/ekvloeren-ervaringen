@@ -1,5 +1,7 @@
 "use server"
 
+import { revalidatePath } from "next/cache"
+
 import { sql, type Report, type ReportFile, type ReportStatus } from "@/lib/db"
 import { reportSchema, checkForModeration } from "@/lib/validations/report"
 import { put } from "@vercel/blob"
@@ -155,7 +157,136 @@ export async function submitReport(formData: FormData): Promise<SubmitReportResu
   }
 }
 
-// ... (existing admin functions) ...
+export async function getReports(status: ReportStatus | "all" = "all", query = ""): Promise<any[]> {
+  try {
+    let reports
+    if (status === "all") {
+      if (query) {
+        reports = await sql`
+          SELECT * FROM reports 
+          WHERE (name ILIKE ${`%${query}%`} OR contact ILIKE ${`%${query}%`} OR city ILIKE ${`%${query}%`})
+          ORDER BY created_at DESC
+        `
+      } else {
+        reports = await sql`SELECT * FROM reports ORDER BY created_at DESC`
+      }
+    } else {
+      if (query) {
+        reports = await sql`
+          SELECT * FROM reports 
+          WHERE status = ${status} 
+          AND (name ILIKE ${`%${query}%`} OR contact ILIKE ${`%${query}%`} OR city ILIKE ${`%${query}%`})
+          ORDER BY created_at DESC
+        `
+      } else {
+        reports = await sql`SELECT * FROM reports WHERE status = ${status} ORDER BY created_at DESC`
+      }
+    }
+
+    // Enrich with files
+    const reportsWithFiles = await Promise.all(
+      reports.map(async (report) => {
+        const files = await sql`SELECT * FROM report_files WHERE report_id = ${report.id}`
+        return { ...report, files }
+      }),
+    )
+
+    return reportsWithFiles
+  } catch (error) {
+    console.error("Error fetching reports:", error)
+    return []
+  }
+}
+
+export async function updateReportStatus(
+  reportId: string,
+  newStatus: ReportStatus,
+  linkToReportId?: string,
+): Promise<void> {
+  try {
+    await sql`
+      UPDATE reports 
+      SET status = ${newStatus}, link_to_report_id = ${linkToReportId || null}
+      WHERE id = ${reportId}
+    `
+    revalidatePath("/admin")
+    revalidatePath("/")
+  } catch (error) {
+    console.error("Error updating status:", error)
+    throw error
+  }
+}
+
+export async function updateReportNotes(reportId: string, notes: string): Promise<void> {
+  try {
+    await sql`
+      UPDATE reports 
+      SET internal_notes = ${notes}
+      WHERE id = ${reportId}
+    `
+    revalidatePath("/admin")
+  } catch (error) {
+    console.error("Error updating notes:", error)
+    throw error
+  }
+}
+
+export async function deleteReport(reportId: string): Promise<void> {
+  try {
+    // Delete files from storage would go here ideally
+    await sql`DELETE FROM report_files WHERE report_id = ${reportId}`
+    await sql`DELETE FROM reports WHERE id = ${reportId}`
+    revalidatePath("/admin")
+    revalidatePath("/")
+  } catch (error) {
+    console.error("Error deleting report:", error)
+    throw error
+  }
+}
+
+export async function getApprovedCount(): Promise<number> {
+  try {
+    const result = await sql`SELECT COUNT(*) as count FROM reports WHERE status = 'approved'`
+    return Number.parseInt(result[0]?.count as string) || 0
+  } catch {
+    return 0
+  }
+}
+
+export async function getCounterAdjustment(): Promise<number> {
+  try {
+    const result = await sql`SELECT value FROM settings WHERE key = 'counter_adjustment'`
+    return Number.parseInt(result[0]?.value as string) || 0
+  } catch {
+    return 0
+  }
+}
+
+export async function setCounterAdjustment(value: number): Promise<void> {
+  try {
+    // Create settings table if not exists (simple safety)
+    await sql`
+      CREATE TABLE IF NOT EXISTS settings (
+        key VARCHAR(255) PRIMARY KEY,
+        value VARCHAR(255) NOT NULL
+      )
+    `
+
+    // Check if exists
+    const exists = await sql`SELECT * FROM settings WHERE key = 'counter_adjustment'`
+    if (exists.length > 0) {
+      await sql`UPDATE settings SET value = ${value.toString()} WHERE key = 'counter_adjustment'`
+    } else {
+      await sql`INSERT INTO settings (key, value) VALUES ('counter_adjustment', ${value.toString()})`
+    }
+
+    revalidatePath("/")
+    revalidatePath("/admin")
+  } catch (error) {
+    console.error("Error setting counter adjustment:", error)
+    throw error
+  }
+}
 
 export async function getPublicCounter(): Promise<number> {
   const [approved, adjustment] = await Promise.all([getApprovedCount(), getCounterAdjustment()])
