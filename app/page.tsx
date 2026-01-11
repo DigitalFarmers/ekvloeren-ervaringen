@@ -30,7 +30,7 @@ export default function HomePage() {
               Geld kwijt aan <span className="text-red-600">EK Vloeren</span>?<br />Je staat niet alleen.
             </h1>
             <p className="mx-auto mt-6 max-w-2xl text-lg text-muted-foreground sm:text-xl animate-fade-in-up animate-delay-100">
-              Meld je ervaring met <span className="text-red-600 font-bold">EK Vloeren (Erwin Kooistra)</span>.
+              Meld je ervaring met <span className="text-red-600 font-bold">Erwin Kooistra</span> (KVK 88945685).
               We verzamelen <span className="text-primary font-bold">meldingen</span> gestructureerd en vertrouwelijk,
               zodat patronen zichtbaar worden en anderen niet dezelfde fout maken.
             </p>
@@ -243,13 +243,13 @@ export default function HomePage() {
             Neem contact op om samen te werken aan gerechtigheid.
           </p>
           <div className="flex justify-center gap-4">
-            <Button asChild variant="outline" size="lg" className="border-border text-foreground hover:text-blue-600 hover:border-blue-600 hover:bg-blue-600/10 transition-colors duration-300">
+            <Button asChild variant="outline" size="lg" className="border-border text-foreground hover:bg-blue-600 hover:text-white hover:border-blue-600 transition-colors duration-300">
               <a href="mailto:meld@ekvloeren-ervaringen.nl?subject=Persaanvraag">
                 <Newspaper className="mr-2 h-4 w-4" />
                 Perscontact
               </a>
             </Button>
-            <Button asChild variant="outline" size="lg" className="border-border text-foreground hover:text-blue-600 hover:border-blue-600 hover:bg-blue-600/10 transition-colors duration-300">
+            <Button asChild variant="outline" size="lg" className="border-border text-foreground hover:bg-blue-600 hover:text-white hover:border-blue-600 transition-colors duration-300">
               <a href="mailto:meld@ekvloeren-ervaringen.nl?subject=Juridisch">
                 <Scale className="mr-2 h-4 w-4" />
                 Juridisch overleg
