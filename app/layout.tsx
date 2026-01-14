@@ -22,11 +22,6 @@ export const metadata: Metadata = {
   description:
     "Een onafhankelijk meldpunt voor ervaringen met EK Vloeren. Deel je ervaring vertrouwelijk en help anderen een geïnformeerde keuze te maken.",
   keywords: ["EK Vloeren", "Erwin Kooistra", "Opgelicht", "Aanbetaling kwijt", "Ervaringen", "Klachten", "Meldpunt"],
-  icons: {
-    icon: '/icon.png',
-    shortcut: '/favicon.ico',
-    apple: '/icon.png',
-  },
   openGraph: {
     title: "EK Vloeren Ervaringen",
     description: "Meld je ervaring met EK Vloeren. Vertrouwelijk en gestructureerd.",
