@@ -243,13 +243,13 @@ export default function HomePage() {
             Neem contact op om samen te werken aan gerechtigheid.
           </p>
           <div className="flex justify-center gap-4">
-            <Button asChild variant="outline" size="lg" className="border-border text-foreground hover:bg-blue-600 hover:text-white hover:border-blue-600 transition-colors duration-300">
+            <Button asChild variant="outline" size="lg" className="border-border text-foreground hover:!bg-blue-600 hover:!text-white hover:!border-blue-600 transition-colors duration-300">
               <a href="mailto:meld@ekvloeren-ervaringen.nl?subject=Persaanvraag">
                 <Newspaper className="mr-2 h-4 w-4" />
                 Perscontact
               </a>
             </Button>
-            <Button asChild variant="outline" size="lg" className="border-border text-foreground hover:bg-blue-600 hover:text-white hover:border-blue-600 transition-colors duration-300">
+            <Button asChild variant="outline" size="lg" className="border-border text-foreground hover:!bg-blue-600 hover:!text-white hover:!border-blue-600 transition-colors duration-300">
               <a href="mailto:meld@ekvloeren-ervaringen.nl?subject=Juridisch">
                 <Scale className="mr-2 h-4 w-4" />
                 Juridisch overleg
