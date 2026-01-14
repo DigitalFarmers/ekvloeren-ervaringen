@@ -22,6 +22,11 @@ export const metadata: Metadata = {
   description:
     "Een onafhankelijk meldpunt voor ervaringen met EK Vloeren. Deel je ervaring vertrouwelijk en help anderen een geïnformeerde keuze te maken.",
   keywords: ["EK Vloeren", "Erwin Kooistra", "Opgelicht", "Aanbetaling kwijt", "Ervaringen", "Klachten", "Meldpunt"],
+  icons: {
+    icon: '/icon.png',
+    shortcut: '/favicon.ico',
+    apple: '/icon.png',
+  },
   openGraph: {
     title: "EK Vloeren Ervaringen",
     description: "Meld je ervaring met EK Vloeren. Vertrouwelijk en gestructureerd.",
@@ -46,7 +51,7 @@ export default function RootLayout({
       <body className={`${spaceGrotesk.variable} ${inter.variable} font-body antialiased min-h-screen flex flex-col`}>
         <ThemeProvider
           attribute="class"
-          defaultTheme="dark"
+          defaultTheme="system"
           enableSystem
           disableTransitionOnChange
         >
@@ -62,7 +67,7 @@ export default function RootLayout({
           </div>
           <div className="h-0 md:h-0 pb-20 md:pb-0" /> {/* Spacer for sticky footer */}
           <Analytics />
-          <GoogleAnalytics gaId={process.env.NEXT_PUBLIC_GOOGLE_ANALYTICS_ID || ""} />
+          <GoogleAnalytics gaId={process.env.NEXT_PUBLIC_GOOGLE_ANALYTICS_ID || "G-V6BT9X7YQP"} />
         </ThemeProvider>
       </body>
     </html>

@@ -313,7 +313,7 @@ export default function HomePage() {
               href="https://digitalfarmers.be"
               target="_blank"
               rel="noopener noreferrer"
-              className="group text-white transition-colors text-lg font-medium inline-flex items-center gap-1 mb-4"
+              className="group text-foreground transition-colors text-lg font-medium inline-flex items-center gap-1 mb-4"
             >
               <span className="group-hover:text-[#E68404] transition-colors">DigitalFarmers.be</span>
               <span className="text-muted-foreground mx-1">|</span>
@@ -324,7 +324,7 @@ export default function HomePage() {
               Voor mensen. Voor transparantie. Voor verandering.
             </p>
             <p className="text-sm leading-5 text-muted-foreground max-w-xl mx-auto">
-              Een non-profit initiatief van <strong>Digital Farmers</strong> dat technologie inzet om onrecht zichtbaar te maken.
+              Een non-profit initiatief van <a href="https://digitalfarmers.be" target="_blank" rel="noopener noreferrer" className="font-bold hover:text-foreground transition-colors">Digital Farmers</a> dat technologie inzet om onrecht zichtbaar te maken.
               Wij geloven dat data en transparantie de sterkste wapens zijn tegen misleiding.
             </p>
           </div>

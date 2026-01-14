@@ -74,7 +74,7 @@ export default async function Image() {
                         }}
                     >
                         Geld kwijt aan <br />
-                        <span style={{ color: '#dc2626' }}>EK Vloeren?</span>
+                        <span style={{ color: '#dc2626' }}> EK Vloeren?</span>
                     </h1>
 
                     <p
