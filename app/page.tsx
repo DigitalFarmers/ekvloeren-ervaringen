@@ -27,11 +27,11 @@ export default function HomePage() {
         <div className="absolute inset-0 bg-gradient-to-b from-background via-background/90 to-background z-0" />
 
         <div className="relative z-10 mx-auto max-w-5xl px-4 sm:px-6 lg:px-8 text-center">
-          <h1 className="text-4xl font-bold tracking-tight text-white mb-6 sm:text-6xl lg:text-7xl font-heading leading-tight animate-fade-in-up">
+          <h1 className="text-4xl font-bold tracking-tight text-zinc-900 dark:text-white mb-6 sm:text-6xl lg:text-7xl font-heading leading-tight animate-fade-in-up">
             Geld kwijt aan <span className="text-red-600">EK Vloeren</span>?
           </h1>
 
-          <ul className="flex flex-col md:flex-row justify-center gap-4 text-lg md:text-xl text-zinc-300 mb-10 font-medium animate-fade-in-up animate-delay-100">
+          <ul className="flex flex-col md:flex-row justify-center gap-4 text-lg md:text-xl text-zinc-600 dark:text-zinc-300 mb-10 font-medium animate-fade-in-up animate-delay-100">
             <li className="flex items-center justify-center gap-2">
               <AlertCircle className="w-5 h-5 text-red-400" /> Voorschot betaald?
             </li>
@@ -43,9 +43,9 @@ export default function HomePage() {
             </li>
           </ul>
 
-          <p className="mx-auto max-w-2xl text-zinc-400 mb-10 text-base md:text-lg leading-relaxed animate-fade-in-up animate-delay-200">
+          <p className="mx-auto max-w-2xl text-zinc-600 dark:text-zinc-400 mb-10 text-base md:text-lg leading-relaxed animate-fade-in-up animate-delay-200">
             Individuele verhalen verdwijnen. Patronen niet. <br />
-            Dit platform verzamelt en verifieert meldingen over <span className="text-white font-semibold">Erwin Kooistra (KVK 88945685)</span> om samen een vuist te maken.
+            Dit platform verzamelt en verifieert meldingen over <span className="text-zinc-900 dark:text-white font-semibold">Erwin Kooistra (KVK 88945685)</span> om samen een vuist te maken.
             Geen roddels. Geen smaad. Alleen de feiten.
           </p>
 
@@ -96,11 +96,11 @@ export default function HomePage() {
       {/* Mission Section (Why) */}
       <section className="py-24 bg-background">
         <div className="mx-auto max-w-3xl px-6 text-center">
-          <h2 className="text-3xl font-bold text-white mb-8">Waarom dit platform bestaat</h2>
-          <div className="space-y-6 text-lg text-zinc-400 leading-relaxed">
+          <h2 className="text-3xl font-bold text-zinc-900 dark:text-white mb-8">Waarom dit platform bestaat</h2>
+          <div className="space-y-6 text-lg text-zinc-600 dark:text-zinc-400 leading-relaxed">
             <p>
               Wanneer één persoon zijn verhaal deelt, is het een incident.
-              Wanneer tientallen mensen hetzelfde verhaal delen, is het een <strong className="text-white">bewijsbaar patroon</strong>.
+              Wanneer tientallen mensen hetzelfde verhaal delen, is het een <strong className="text-zinc-900 dark:text-white">bewijsbaar patroon</strong>.
             </p>
             <p>
               Digital Farmers heeft dit platform gebouwd om versnipperde klachten om te zetten in gestructureerde data.
@@ -109,17 +109,17 @@ export default function HomePage() {
             <div className="pt-8 grid grid-cols-1 md:grid-cols-3 gap-8">
               <div>
                 <Shield className="w-8 h-8 text-emerald-500 mx-auto mb-3" />
-                <h4 className="text-white font-semibold mb-2">Veilig</h4>
+                <h4 className="text-zinc-900 dark:text-white font-semibold mb-2">Veilig</h4>
                 <p className="text-sm">Je gegevens blijven privé. Alleen het verhaal wordt gedeeld.</p>
               </div>
               <div>
                 <Scale className="w-8 h-8 text-emerald-500 mx-auto mb-3" />
-                <h4 className="text-white font-semibold mb-2">Feitelijk</h4>
+                <h4 className="text-zinc-900 dark:text-white font-semibold mb-2">Feitelijk</h4>
                 <p className="text-sm">Geen scheldpartijen. Alleen verifieerbare ervaringen.</p>
               </div>
               <div>
                 <Users className="w-8 h-8 text-emerald-500 mx-auto mb-3" />
-                <h4 className="text-white font-semibold mb-2">Samen</h4>
+                <h4 className="text-zinc-900 dark:text-white font-semibold mb-2">Samen</h4>
                 <p className="text-sm">Van machteloos individu naar collectief dossier.</p>
               </div>
             </div>
