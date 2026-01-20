@@ -5,6 +5,7 @@ import { Analytics } from "@vercel/analytics/next"
 import { GoogleAnalytics } from '@next/third-parties/google'
 import { ThemeProvider } from "@/components/theme-provider"
 import { SiteHeader } from "@/components/site-header"
+import { JsonLd } from "@/components/json-ld"
 import "./globals.css"
 
 const spaceGrotesk = Space_Grotesk({
@@ -50,6 +51,7 @@ export default function RootLayout({
           enableSystem
           disableTransitionOnChange
         >
+          <JsonLd />
           <SiteHeader />
           <div className="flex-1">
             {children}
