@@ -1,13 +1,12 @@
 "use client"
 
 import * as React from "react"
-import { Link } from "@/navigation"
-import { usePathname } from "@/navigation"
+import Link from "next/link"
+import { usePathname } from "next/navigation"
 import { Menu, Shield } from "lucide-react"
 
 import { Button } from "@/components/ui/button"
 import { ThemeToggle } from "@/components/theme-toggle"
-import { LanguageSwitcher } from "@/components/language-switcher"
 import {
     Sheet,
     SheetContent,
@@ -54,15 +53,11 @@ export function SiteHeader() {
                             {item.name}
                         </Link>
                     ))}
-                    <div className="flex items-center gap-2">
-                        <LanguageSwitcher />
-                        <ThemeToggle />
-                    </div>
+                    <ThemeToggle />
                 </nav>
 
                 {/* Mobile Navigation */}
                 <div className="flex items-center gap-4 md:hidden">
-                    <LanguageSwitcher />
                     <ThemeToggle />
                     <Sheet open={open} onOpenChange={setOpen}>
                         <SheetTrigger asChild>
