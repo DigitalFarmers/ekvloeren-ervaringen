@@ -23,129 +23,105 @@ export default function HomePage() {
     <div className="min-h-screen bg-background">
       {/* Hero Section */}
       {/* Hero Section */}
-      <section className="relative overflow-hidden">
-        <div className="absolute inset-0 bg-gradient-to-br from-background via-background/95 to-background/90" />
-        <div className="relative mx-auto max-w-6xl px-4 py-24 sm:px-6 lg:px-8">
-          <div className="text-center">
-            <h1 className="text-4xl font-bold tracking-tight text-foreground sm:text-6xl lg:text-7xl animate-fade-in-up">
-              Geld kwijt aan <span className="text-red-600">EK Vloeren</span> / Erwin Kooistra?
-            </h1>
-            <p className="mx-auto mt-6 max-w-2xl text-lg text-muted-foreground sm:text-xl animate-fade-in-up animate-delay-100">
-              U staat niet alleen. Wij verzamelen feitelijke meldingen over niet-uitgevoerde werken en verdwenen voorschotten.
-              Dit platform documenteert het patroon van <span className="font-bold text-foreground">Erwin Kooistra (KVK 88945685)</span> om verdere schade te voorkomen.
-            </p>
-            <div className="mt-10 flex flex-col items-center gap-4 sm:flex-row sm:justify-center animate-fade-in-up animate-delay-200">
-              <Button asChild size="lg" className="glow-accent">
-                <Link href="/meld-je-ervaring">
-                  Meld uw ervaring
-                  <ArrowRight className="ml-2 h-4 w-4" />
-                </Link>
-              </Button>
-              <Button asChild variant="outline" size="lg">
-                <Link href="/hoe-werkt-dit">
-                  Hoe wij werken
-                </Link>
-              </Button>
-            </div>
-            <div className="mt-8 flex flex-wrap justify-center gap-x-8 gap-y-4 text-sm text-muted-foreground animate-fade-in-up animate-delay-300">
-              <div className="flex items-center gap-2">
-                <Shield className="h-4 w-4 text-green-500" />
-                <span>Handmatig gecontroleerd</span>
-              </div>
-              <div className="flex items-center gap-2">
-                <FileText className="h-4 w-4 text-primary" />
-                <span>Documentatie vereist</span>
-              </div>
-              <div className="flex items-center gap-2">
-                <Users className="h-4 w-4 text-blue-500" />
-                <span>Geen privégegevens openbaar</span>
-              </div>
-            </div>
-          </div>
-        </div>
-      </section>
+      <section className="relative overflow-hidden pt-12 pb-24 md:pt-20 md:pb-32">
+        <div className="absolute inset-0 bg-gradient-to-b from-background via-background/90 to-background z-0" />
 
-      {/* Counter Section */}
-      <section className="py-20">
-        <div className="mx-auto max-w-4xl px-4 sm:px-6 lg:px-8">
-          <div className="rounded-2xl border border-border bg-card/60 glass-card p-12 text-center">
-            <div className="grid md:grid-cols-2 gap-12 items-center">
-              <div>
-                <h2 className="text-2xl font-semibold text-foreground mb-4">
-                  Aantal meldingen
-                </h2>
-                <div className="counter-glow text-6xl font-bold text-primary mb-2">
-                  <Counter />
-                </div>
-              </div>
-              <div>
-                <h2 className="text-2xl font-semibold text-foreground mb-4">
-                  Totaal gemeld schadebedrag
-                </h2>
-                <div className="counter-glow text-5xl font-bold text-red-500 mb-2">
-                  <TotalDamageCounter />
-                </div>
-                <p className="text-xs text-muted-foreground mt-2">
-                  *Op basis van gecontroleerde dossiers
-                </p>
-              </div>
-            </div>
+        <div className="relative z-10 mx-auto max-w-5xl px-4 sm:px-6 lg:px-8 text-center">
+          <h1 className="text-4xl font-bold tracking-tight text-white mb-6 sm:text-6xl lg:text-7xl font-heading leading-tight animate-fade-in-up">
+            Geld kwijt aan <span className="text-emerald-400">EK Vloeren</span>?
+          </h1>
 
-            <div className="mt-8 pt-8 border-t border-border/50">
-              <p className="text-sm text-muted-foreground mb-4">
-                Alleen gecontroleerde meldingen tellen mee. Geen spam. Geen geruchten.
-              </p>
-              <Link
-                href="#moderatie"
-                className="text-primary hover:text-primary/80 text-sm underline"
-              >
-                Hoe we modereren →
+          <ul className="flex flex-col md:flex-row justify-center gap-4 text-lg md:text-xl text-zinc-300 mb-10 font-medium animate-fade-in-up animate-delay-100">
+            <li className="flex items-center justify-center gap-2">
+              <AlertCircle className="w-5 h-5 text-red-400" /> Voorschot betaald?
+            </li>
+            <li className="flex items-center justify-center gap-2">
+              <XCircle className="w-5 h-5 text-red-400" /> Nooit komen opdagen?
+            </li>
+            <li className="flex items-center justify-center gap-2">
+              <Shield className="w-5 h-5 text-emerald-400" /> Je bent niet alleen.
+            </li>
+          </ul>
+
+          <p className="mx-auto max-w-2xl text-zinc-400 mb-10 text-base md:text-lg leading-relaxed animate-fade-in-up animate-delay-200">
+            Individuele verhalen verdwijnen. Patronen niet. <br />
+            Dit platform verzamelt en verifieert meldingen over <span className="text-white font-semibold">Erwin Kooistra (KVK 88945685)</span> om samen een vuist te maken.
+            Geen roddels. Geen smaad. Alleen de feiten.
+          </p>
+
+          <div className="flex flex-col sm:flex-row justify-center gap-4 animate-fade-in-up animate-delay-300">
+            <Button asChild size="lg" className="bg-emerald-600 hover:bg-emerald-700 text-white border-none shadow-[0_0_20px_rgba(16,185,129,0.3)] text-lg px-8 h-12">
+              <Link href="/meld-je-ervaring">
+                Meld je ervaring
               </Link>
-            </div>
+            </Button>
+            <Button asChild variant="outline" size="lg" className="border-zinc-700 text-zinc-300 hover:bg-zinc-800 hover:text-white h-12 px-8">
+              <Link href="/hoe-werkt-dit">
+                Bekijk hoe het werkt
+              </Link>
+            </Button>
           </div>
         </div>
       </section>
 
-      {/* Why Section */}
-      <section id="hoe-werkt-het" className="py-20">
+      {/* Counter Section - Re-styled */}
+      <section className="py-12 border-y border-white/5 bg-zinc-900/30">
         <div className="mx-auto max-w-4xl px-4 sm:px-6 lg:px-8">
-          <div className="text-center mb-12">
-            <h2 className="text-3xl font-bold text-foreground mb-4">
-              Waarom dit platform
-            </h2>
-            <p className="text-lg text-muted-foreground max-w-2xl mx-auto">
-              Dit platform bestaat vanwege aanhoudende meldingen over EK Vloeren (Erwin Kooistra).
-              Voorschotten worden gevraagd, maar werkzaamheden blijven uit.
-            </p>
-          </div>
+          <div className="grid md:grid-cols-2 gap-8 items-center justify-items-center text-center">
 
-          <div className="grid gap-6 md:grid-cols-3">
-            <div className="flex flex-col items-center text-center p-6">
-              <div className="mb-4 rounded-full bg-primary/10 p-4">
-                <Shield className="h-8 w-8 text-green-500" />
+            <div className="space-y-2">
+              <div className="flex items-center gap-2 text-emerald-400 justify-center mb-2">
+                <AlertCircle className="w-5 h-5" />
+                <h3 className="uppercase tracking-widest text-xs font-bold">Bevestigde Meldingen</h3>
               </div>
-              <h3 className="text-xl font-bold">1. Vertrouwelijk</h3>
-              <p className="mt-2 text-muted-foreground">
-                Je gegevens worden veilig opgeslagen en nooit openbaar gedeeld zonder toestemming.
-              </p>
+              <div className="text-5xl md:text-6xl font-bold text-white font-mono tracking-tighter">
+                <Counter />
+              </div>
             </div>
-            <div className="flex flex-col items-center text-center p-6">
-              <div className="mb-4 rounded-full bg-primary/10 p-4">
-                <FileText className="h-8 w-8 text-blue-500" />
+
+            <div className="space-y-2">
+              <div className="flex items-center gap-2 text-red-400 justify-center mb-2">
+                <Scale className="w-5 h-5" />
+                <h3 className="uppercase tracking-widest text-xs font-bold">Totaal Schadebedrag</h3>
               </div>
-              <h3 className="text-xl font-bold">2. Gestructureerd</h3>
-              <p className="mt-2 text-muted-foreground">
-                We bouwen een dossier op dat juridisch bruikbaar is voor eventuele groepsvorderingen.
-              </p>
+              <div className="text-4xl md:text-5xl font-bold text-white font-mono tracking-tighter">
+                <TotalDamageCounter />
+              </div>
             </div>
-            <div className="flex flex-col items-center text-center p-6">
-              <div className="mb-4 rounded-full bg-primary/10 p-4">
-                <Users className="h-8 w-8 text-red-500" />
+
+          </div>
+        </div>
+      </section>
+
+      {/* Mission Section (Why) */}
+      <section className="py-24 bg-background">
+        <div className="mx-auto max-w-3xl px-6 text-center">
+          <h2 className="text-3xl font-bold text-white mb-8">Waarom dit platform bestaat</h2>
+          <div className="space-y-6 text-lg text-zinc-400 leading-relaxed">
+            <p>
+              Wanneer één persoon zijn verhaal deelt, is het een incident.
+              Wanneer tientallen mensen hetzelfde verhaal delen, is het een <strong className="text-white">bewijsbaar patroon</strong>.
+            </p>
+            <p>
+              Digital Farmers heeft dit platform gebouwd om versnipperde klachten om te zetten in gestructureerde data.
+              Zodat nieuwe klanten gewaarschuwd worden en gedupeerden sterk staan.
+            </p>
+            <div className="pt-8 grid grid-cols-1 md:grid-cols-3 gap-8">
+              <div>
+                <Shield className="w-8 h-8 text-emerald-500 mx-auto mb-3" />
+                <h4 className="text-white font-semibold mb-2">Veilig</h4>
+                <p className="text-sm">Je gegevens blijven privé. Alleen het verhaal wordt gedeeld.</p>
               </div>
-              <h3 className="text-xl font-bold">3. Preventie</h3>
-              <p className="mt-2 text-muted-foreground">
-                Samen zorgen we dat er niet nog meer slachtoffers vallen door deze praktijken.
-              </p>
+              <div>
+                <Scale className="w-8 h-8 text-emerald-500 mx-auto mb-3" />
+                <h4 className="text-white font-semibold mb-2">Feitelijk</h4>
+                <p className="text-sm">Geen scheldpartijen. Alleen verifieerbare ervaringen.</p>
+              </div>
+              <div>
+                <Users className="w-8 h-8 text-emerald-500 mx-auto mb-3" />
+                <h4 className="text-white font-semibold mb-2">Samen</h4>
+                <p className="text-sm">Van machteloos individu naar collectief dossier.</p>
+              </div>
             </div>
           </div>
         </div>
@@ -282,52 +258,55 @@ export default function HomePage() {
       </section>
 
       {/* Footer */}
-      <footer className="border-t border-border bg-card/30 backdrop-blur-sm">
-        <div className="mx-auto max-w-7xl overflow-hidden px-6 py-12 sm:py-16 lg:px-8">
-          <div className="mt-8 flex justify-center space-x-10">
-            <ThemeToggle />
+      <footer className="border-t border-white/10 bg-zinc-950">
+        <div className="mx-auto max-w-7xl px-6 py-12 lg:px-8">
+          <div className="flex justify-center space-x-10">
+            {/* Hidden theme toggle since we force dark for now, but keeping layout */}
           </div>
           <nav className="-mb-6 columns-2 sm:flex sm:justify-center sm:space-x-12" aria-label="Footer">
             <div className="pb-6">
-              <Link href="/meld-je-ervaring" className="text-sm leading-6 text-muted-foreground hover:text-foreground">
+              <Link href="/meld-je-ervaring" className="text-sm leading-6 text-zinc-400 hover:text-emerald-400 transition-colors">
                 Melden
               </Link>
             </div>
             <div className="pb-6">
-              <Link href="/privacy" className="text-sm leading-6 text-muted-foreground hover:text-foreground">
+              <Link href="/privacy" className="text-sm leading-6 text-zinc-400 hover:text-emerald-400 transition-colors">
                 Privacy
               </Link>
             </div>
             <div className="pb-6">
-              <Link href="/voorwaarden" className="text-sm leading-6 text-muted-foreground hover:text-foreground">
+              <Link href="/voorwaarden" className="text-sm leading-6 text-zinc-400 hover:text-emerald-400 transition-colors">
                 Voorwaarden
               </Link>
             </div>
             <div className="pb-6">
-              <Link href="/contact" className="text-sm leading-6 text-muted-foreground hover:text-foreground">
-                Contact
+              <Link href="/contact" className="text-sm leading-6 text-zinc-400 hover:text-emerald-400 transition-colors">
+                contact
               </Link>
             </div>
           </nav>
 
-          <div className="mt-16 border-t border-border/50 pt-8 sm:mt-20 lg:mt-24 text-center">
+          <div className="mt-16 border-t border-white/10 pt-8 sm:mt-20 lg:mt-24 text-center">
+
+            <div className="mb-6 flex flex-col items-center gap-2 animate-fade-in-up">
+              <span className="text-2xl">🌱</span>
+              <p className="text-zinc-500 italic text-sm">Every report is a seed. Together they grow into clarity.</p>
+            </div>
+
             <a
               href="https://digitalfarmers.be"
               target="_blank"
               rel="noopener noreferrer"
-              className="group text-foreground transition-colors text-lg font-medium inline-flex items-center gap-1 mb-4"
+              className="group text-white transition-colors text-lg font-medium inline-flex items-center gap-2 mb-2"
             >
-              <span className="group-hover:text-[#E68404] transition-colors">DigitalFarmers.be</span>
-              <span className="text-muted-foreground mx-1">|</span>
-              <span>Start small, <span className="font-bold">GROW BIG</span></span>
-              <span className="transform transition-transform duration-300 group-hover:scale-150 inline-block ml-1">🌱</span>
+              <span className="group-hover:text-emerald-400 transition-colors font-bold">Digital Farmers</span>
+              <span className="text-zinc-600">|</span>
+              <span className="text-zinc-400 group-hover:text-white transition-colors">Turning silence into signal.</span>
             </a>
-            <p className="text-base text-foreground font-medium mb-1">
-              Voor mensen. Voor transparantie. Voor verandering.
-            </p>
-            <p className="text-sm leading-5 text-muted-foreground max-w-xl mx-auto">
-              Een non-profit initiatief van <a href="https://digitalfarmers.be" target="_blank" rel="noopener noreferrer" className="font-bold hover:text-foreground transition-colors">Digital Farmers</a> dat technologie inzet om onrecht zichtbaar te maken.
-              Wij geloven dat data en transparantie de sterkste wapens zijn tegen misleiding.
+
+            <p className="text-xs leading-5 text-zinc-600 max-w-xl mx-auto mt-4">
+              Dit platform is een non-profit initiatief ter bescherming van consumenten.
+              Wij zijn onafhankelijk en hebben geen commerciële banden met de betrokken partijen.
             </p>
           </div>
         </div>
