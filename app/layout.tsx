@@ -38,6 +38,7 @@ export const metadata: Metadata = {
 }
 
 
+// Forced rebuild for stability check
 export default function RootLayout({
   children,
 }: Readonly<{
