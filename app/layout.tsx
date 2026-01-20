@@ -6,7 +6,7 @@ import { GoogleAnalytics } from '@next/third-parties/google'
 import { ThemeProvider } from "@/components/theme-provider"
 import { SiteHeader } from "@/components/site-header"
 import { JsonLd } from "@/components/json-ld"
-import "../../globals.css"
+import "./globals.css"
 
 const spaceGrotesk = Space_Grotesk({
   subsets: ["latin"],
