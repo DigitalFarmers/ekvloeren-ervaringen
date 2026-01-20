@@ -22,34 +22,45 @@ export default function HomePage() {
   return (
     <div className="min-h-screen bg-background">
       {/* Hero Section */}
+      {/* Hero Section */}
       <section className="relative overflow-hidden">
         <div className="absolute inset-0 bg-gradient-to-br from-background via-background/95 to-background/90" />
         <div className="relative mx-auto max-w-6xl px-4 py-24 sm:px-6 lg:px-8">
           <div className="text-center">
             <h1 className="text-4xl font-bold tracking-tight text-foreground sm:text-6xl lg:text-7xl animate-fade-in-up">
-              Geld kwijt aan <span className="text-red-600">EK Vloeren</span>?<br />Je staat niet alleen.
+              Geld kwijt aan <span className="text-red-600">EK Vloeren</span> / Erwin Kooistra?
             </h1>
             <p className="mx-auto mt-6 max-w-2xl text-lg text-muted-foreground sm:text-xl animate-fade-in-up animate-delay-100">
-              Meld je ervaring met <span className="text-red-600 font-bold">Erwin Kooistra</span> (KVK 88945685).
-              We verzamelen <span className="text-primary font-bold">meldingen</span> gestructureerd en vertrouwelijk,
-              zodat patronen zichtbaar worden en anderen niet dezelfde fout maken.
+              U staat niet alleen. Wij verzamelen feitelijke meldingen over niet-uitgevoerde werken en verdwenen voorschotten.
+              Dit platform documenteert het patroon van <span className="font-bold text-foreground">Erwin Kooistra (KVK 88945685)</span> om verdere schade te voorkomen.
             </p>
             <div className="mt-10 flex flex-col items-center gap-4 sm:flex-row sm:justify-center animate-fade-in-up animate-delay-200">
               <Button asChild size="lg" className="glow-accent">
                 <Link href="/meld-je-ervaring">
-                  Meld je ervaring
+                  Meld uw ervaring
                   <ArrowRight className="ml-2 h-4 w-4" />
                 </Link>
               </Button>
               <Button asChild variant="outline" size="lg">
-                <Link href="#hoe-werkt-het">
-                  Lees hoe dit werkt
+                <Link href="/hoe-werkt-dit">
+                  Hoe wij werken
                 </Link>
               </Button>
             </div>
-            <p className="mt-6 text-sm text-muted-foreground animate-fade-in-up animate-delay-300 flex items-center justify-center gap-2">
-              <Shield className="h-4 w-4" /> Wij verifiëren elke melding (factuur + betalingsbewijs).
-            </p>
+            <div className="mt-8 flex flex-wrap justify-center gap-x-8 gap-y-4 text-sm text-muted-foreground animate-fade-in-up animate-delay-300">
+              <div className="flex items-center gap-2">
+                <Shield className="h-4 w-4 text-green-500" />
+                <span>Handmatig gecontroleerd</span>
+              </div>
+              <div className="flex items-center gap-2">
+                <FileText className="h-4 w-4 text-primary" />
+                <span>Documentatie vereist</span>
+              </div>
+              <div className="flex items-center gap-2">
+                <Users className="h-4 w-4 text-blue-500" />
+                <span>Geen privégegevens openbaar</span>
+              </div>
+            </div>
           </div>
         </div>
       </section>
@@ -144,67 +155,58 @@ export default function HomePage() {
       <section className="py-20">
         <div className="mx-auto max-w-6xl px-4 sm:px-6 lg:px-8">
           <h2 className="text-3xl font-bold text-foreground text-center mb-12">
-            Wat dit wél is / niet is
+            Doelstelling van dit platform
           </h2>
           <div className="grid gap-12 lg:grid-cols-2">
-            {/* Wat dit IS - Now on the Right (Tablet/Desktop) but first on Mobile? No, user said: "Bij mobiel niet eerst vanboven / wat dit wel is beneden". 
-               Wait, user said: "Wat dit wél is / niet is. zet wat dit niet is links, en wat dit wel is rechtSs ook op de "hoe werkt het "pagina. Bij mobiel niet eerst vanboven / wat dit wel is beneden"
-               This is slightly ambiguous. "Bij mobiel niet eerst vanboven / wat dit wel is beneden" -> "On mobile not first from top / what this is below".
-               Standard stacking is Left -> Top. If "Not" is Left, it will be Top. 
-               If User wants "Is" (Right) to NOT be below, they want "Is" to be Top?
-               "Bij mobiel niet eerst vanboven" -> Maybe they mean "Don't put [Not] first on top"?
-               Let's assume they want "What IS" to be the most visible thing on mobile. 
-               So on Mobile: "What IS" first. On Desktop: "What Not" (Left) - "What Is" (Right).
-               To achieve this with Grid: Desktop: Not(col-1) Is(col-2). Mobile: Is(order-1) Not(order-2).
-           */}
 
-            {/* Wat dit NIET is (Left on Desktop, Second on Mobile) */}
-            <div className="rounded-2xl border border-border bg-card/50 p-8 backdrop-blur-sm order-2 lg:order-1">
-              <div className="flex items-center gap-4">
-                <div className="rounded-full bg-red-100 p-3 dark:bg-red-900/20">
-                  <AlertCircle className="h-6 w-6 text-red-600" />
-                </div>
-                <h3 className="text-xl font-bold">Wat dit NIET is</h3>
-              </div>
-              <ul className="mt-6 space-y-4 text-muted-foreground">
-                <li className="flex items-start gap-3">
-                  <XCircle className="mt-1 h-5 w-5 shrink-0 text-red-600" />
-                  <span>Een plek voor ongefundeerde haat of smaad.</span>
-                </li>
-                <li className="flex items-start gap-3">
-                  <XCircle className="mt-1 h-5 w-5 shrink-0 text-red-600" />
-                  <span>Een officieel juridisch orgaan.</span>
-                </li>
-                <li className="flex items-start gap-3">
-                  <XCircle className="mt-1 h-5 w-5 shrink-0 text-red-600" />
-                  <span>Een vervanging voor aangifte bij de politie.</span>
-                </li>
-              </ul>
-            </div>
-
-            {/* Wat dit WEL is (Right on Desktop, First on Mobile) */}
-            <div className="rounded-2xl border border-border bg-card/50 p-8 backdrop-blur-sm order-1 lg:order-2">
+            {/* Wat dit WÉL is (First on Mobile, Left on Desktop) */}
+            <div className="rounded-2xl border border-border bg-card/50 p-8 backdrop-blur-sm order-1">
               <div className="flex items-center gap-4">
                 <div className="rounded-full bg-primary/10 p-3">
                   <CheckCircle2 className="h-6 w-6 text-primary" />
                 </div>
-                <h3 className="text-xl font-bold">Wat dit WÉL is</h3>
+                <h3 className="text-xl font-bold">Wat dit platform is</h3>
               </div>
               <ul className="mt-6 space-y-4 text-muted-foreground">
                 <li className="flex items-start gap-3">
                   <CheckCircle2 className="mt-1 h-5 w-5 shrink-0 text-primary" />
-                  <span>Een centraal punt voor slachtoffers.</span>
+                  <span>Een centraal punt voor verificatie van meldingen.</span>
                 </li>
                 <li className="flex items-start gap-3">
                   <CheckCircle2 className="mt-1 h-5 w-5 shrink-0 text-primary" />
-                  <span>Dossieropbouw om de omvang aan te tonen.</span>
+                  <span>Dossieropbouw om de omvang en patroon aan te tonen.</span>
                 </li>
                 <li className="flex items-start gap-3">
                   <CheckCircle2 className="mt-1 h-5 w-5 shrink-0 text-primary" />
-                  <span>Waarschuwing voor toekomstige klanten.</span>
+                  <span>Preventie voor toekomstige consumenten.</span>
                 </li>
               </ul>
             </div>
+
+            {/* Wat dit NIET is (Second on Mobile, Right on Desktop) */}
+            <div className="rounded-2xl border border-border bg-card/50 p-8 backdrop-blur-sm order-2">
+              <div className="flex items-center gap-4">
+                <div className="rounded-full bg-red-100 p-3 dark:bg-red-900/20">
+                  <AlertCircle className="h-6 w-6 text-red-600" />
+                </div>
+                <h3 className="text-xl font-bold">Wat dit platform NIET is</h3>
+              </div>
+              <ul className="mt-6 space-y-4 text-muted-foreground">
+                <li className="flex items-start gap-3">
+                  <XCircle className="mt-1 h-5 w-5 shrink-0 text-red-600" />
+                  <span>Een plek voor ongefundeerde beschuldigingen of smaad.</span>
+                </li>
+                <li className="flex items-start gap-3">
+                  <XCircle className="mt-1 h-5 w-5 shrink-0 text-red-600" />
+                  <span>Een officieel juridisch orgaan of rechtbank.</span>
+                </li>
+                <li className="flex items-start gap-3">
+                  <XCircle className="mt-1 h-5 w-5 shrink-0 text-red-600" />
+                  <span>Een vervanging voor officiële aangifte bij politie/ACM.</span>
+                </li>
+              </ul>
+            </div>
+
           </div>
         </div>
       </section>
