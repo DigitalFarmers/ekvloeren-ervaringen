@@ -30,8 +30,8 @@ export function SiteHeader() {
             <div className="container mx-auto flex h-16 max-w-6xl items-center justify-between px-4 sm:px-6 lg:px-8">
                 <div className="flex items-center gap-2">
                     <Link href="/" className="mr-6 flex items-center space-x-2">
-                        <div className="rounded-full bg-emerald-500/10 p-1">
-                            <Shield className="h-6 w-6 text-emerald-500" />
+                        <div className="rounded-full bg-red-600/10 p-1">
+                            <Shield className="h-6 w-6 text-red-600" />
                         </div>
                         <span className="font-bold sm:inline-block">EK Vloeren</span>
                     </Link>

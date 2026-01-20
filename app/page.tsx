@@ -28,7 +28,7 @@ export default function HomePage() {
 
         <div className="relative z-10 mx-auto max-w-5xl px-4 sm:px-6 lg:px-8 text-center">
           <h1 className="text-4xl font-bold tracking-tight text-white mb-6 sm:text-6xl lg:text-7xl font-heading leading-tight animate-fade-in-up">
-            Geld kwijt aan <span className="text-emerald-400">EK Vloeren</span>?
+            Geld kwijt aan <span className="text-red-600">EK Vloeren</span>?
           </h1>
 
           <ul className="flex flex-col md:flex-row justify-center gap-4 text-lg md:text-xl text-zinc-300 mb-10 font-medium animate-fade-in-up animate-delay-100">
