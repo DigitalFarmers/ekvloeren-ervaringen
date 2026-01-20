@@ -18,18 +18,21 @@ export const metadata: Metadata = {
   },
 }
 
+import { useTranslations } from 'next-intl';
+
+// ... imports ...
+
 export default function HomePage() {
+  const t = useTranslations('HomePage');
+
   return (
     <div className="min-h-screen bg-background">
-      {/* Hero Section */}
       {/* Hero Section */}
       <section className="relative overflow-hidden pt-12 pb-24 md:pt-20 md:pb-32">
         <div className="absolute inset-0 bg-gradient-to-b from-background via-background/90 to-background z-0" />
 
         <div className="relative z-10 mx-auto max-w-5xl px-4 sm:px-6 lg:px-8 text-center">
-          <h1 className="text-4xl font-bold tracking-tight text-zinc-900 dark:text-white mb-6 sm:text-6xl lg:text-7xl font-heading leading-tight animate-fade-in-up">
-            Geld kwijt aan <span className="text-red-600">EK Vloeren</span>?
-          </h1>
+          <h1 className="text-4xl font-bold tracking-tight text-zinc-900 dark:text-white mb-6 sm:text-6xl lg:text-7xl font-heading leading-tight animate-fade-in-up" dangerouslySetInnerHTML={{ __html: t.raw('title') }} />
 
           <ul className="flex flex-col md:flex-row justify-center gap-4 text-lg md:text-xl text-zinc-600 dark:text-zinc-300 mb-10 font-medium animate-fade-in-up animate-delay-100">
             <li className="flex items-center justify-center gap-2">
