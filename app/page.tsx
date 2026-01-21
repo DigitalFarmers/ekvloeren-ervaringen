@@ -54,7 +54,7 @@ export default function HomePage() {
                 Meld je ervaring
               </Link>
             </Button>
-            <Button asChild variant="outline" size="lg" className="border-zinc-700 text-zinc-300 hover:bg-zinc-800 hover:text-white h-12 px-8">
+            <Button asChild variant="outline" size="lg" className="border-zinc-300 text-zinc-700 hover:bg-zinc-100 hover:text-zinc-900 dark:border-zinc-700 dark:text-zinc-300 dark:hover:bg-zinc-800 dark:hover:text-white h-12 px-8">
               <Link href="/hoe-werkt-dit">
                 Bekijk hoe het werkt
               </Link>
@@ -64,26 +64,26 @@ export default function HomePage() {
       </section>
 
       {/* Counter Section - Re-styled */}
-      <section className="py-12 border-y border-white/5 bg-zinc-900/30">
+      <section className="py-12 border-y border-zinc-200 dark:border-white/5 bg-zinc-50 dark:bg-zinc-900/30">
         <div className="mx-auto max-w-4xl px-4 sm:px-6 lg:px-8">
           <div className="grid md:grid-cols-2 gap-8 items-center justify-items-center text-center">
 
             <div className="space-y-2">
-              <div className="flex items-center gap-2 text-emerald-400 justify-center mb-2">
+              <div className="flex items-center gap-2 text-emerald-600 dark:text-emerald-400 justify-center mb-2">
                 <AlertCircle className="w-5 h-5" />
                 <h3 className="uppercase tracking-widest text-xs font-bold">Bevestigde Meldingen</h3>
               </div>
-              <div className="text-5xl md:text-6xl font-bold text-white font-mono tracking-tighter">
+              <div className="text-5xl md:text-6xl font-bold text-zinc-900 dark:text-white font-mono tracking-tighter">
                 <Counter />
               </div>
             </div>
 
             <div className="space-y-2">
-              <div className="flex items-center gap-2 text-red-400 justify-center mb-2">
+              <div className="flex items-center gap-2 text-red-600 dark:text-red-400 justify-center mb-2">
                 <Scale className="w-5 h-5" />
                 <h3 className="uppercase tracking-widest text-xs font-bold">Totaal Schadebedrag</h3>
               </div>
-              <div className="text-4xl md:text-5xl font-bold text-white font-mono tracking-tighter">
+              <div className="text-4xl md:text-5xl font-bold text-zinc-900 dark:text-white font-mono tracking-tighter">
                 <TotalDamageCounter />
               </div>
             </div>
