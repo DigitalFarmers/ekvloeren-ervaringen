@@ -1,6 +1,23 @@
+import type { Metadata } from "next"
+import Link from "next/link"
+import { Counter } from "@/components/counter"
+import { TotalDamageCounter } from "@/components/total-damage-counter"
+import { Button } from "@/components/ui/button"
+import { ThemeToggle } from "@/components/theme-toggle"
+import { ArrowRight, Shield, Users, AlertCircle, Scale, Newspaper, FileText, XCircle, CheckCircle2 } from "lucide-react"
 import { HeroTitleRotator } from "@/components/hero-title-rotator"
 
-// ... (Metadata remains same)
+export const metadata: Metadata = {
+  title: "EK Vloeren Ervaringen | Voorkom de volgende gedupeerde",
+  description: "Meld je ervaring met EK Vloeren. We verzamelen meldingen gestructureerd en vertrouwelijk, zodat patronen zichtbaar worden en anderen niet dezelfde fout maken.",
+  openGraph: {
+    title: "EK Vloeren Ervaringen | Voorkom de volgende gedupeerde",
+    description: "Meld je ervaring met EK Vloeren. Vertrouwelijk en gestructureerd.",
+    type: "website",
+    locale: "nl_NL",
+    siteName: "EK Vloeren Ervaringen",
+  },
+}
 
 export default function HomePage() {
   return (
