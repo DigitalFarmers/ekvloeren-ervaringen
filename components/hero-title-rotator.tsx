@@ -15,13 +15,13 @@ export function HeroTitleRotator() {
     }, [texts.length])
 
     return (
-        <span className="relative inline-flex flex-col h-[1.1em] overflow-hidden align-bottom w-[280px] sm:w-[350px] justify-center text-red-600">
+        <span className="relative inline-flex flex-col h-[1.2em] overflow-hidden align-bottom w-full max-w-[320px] sm:max-w-[450px] justify-center text-red-600">
             {texts.map((text, i) => (
                 <span
                     key={text}
-                    className={`absolute inset-0 flex items-center justify-center transition-all duration-700 ease-in-out ${i === index
-                            ? "opacity-100 translate-y-0"
-                            : "opacity-0 translate-y-full"
+                    className={`absolute inset-0 flex items-center justify-center transition-all duration-1000 ease-in-out ${i === index
+                        ? "opacity-100 translate-y-0 scale-100"
+                        : "opacity-0 -translate-y-8 scale-95"
                         }`}
                     aria-hidden={i !== index}
                 >

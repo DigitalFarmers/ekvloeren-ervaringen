@@ -44,11 +44,19 @@ export default function HomePage() {
             </li>
           </ul>
 
-          <p className="mx-auto max-w-2xl text-zinc-600 dark:text-zinc-400 mb-10 text-base md:text-lg leading-relaxed animate-fade-in-up animate-delay-200">
+          <p className="mx-auto max-w-2xl text-zinc-600 dark:text-zinc-400 mb-6 text-base md:text-lg leading-relaxed animate-fade-in-up animate-delay-200">
             Individuele verhalen verdwijnen. Patronen niet. <br />
             Dit platform verzamelt en verifieert meldingen over <span className="text-zinc-900 dark:text-white font-semibold">Erwin Kooistra (KVK 88945685)</span> om samen een vuist te maken.
             Geen roddels. Geen smaad. Alleen de feiten.
           </p>
+
+          <div className="mx-auto max-w-2xl bg-zinc-100/50 dark:bg-zinc-900/50 rounded-lg p-3 mb-10 border border-zinc-200 dark:border-zinc-800 animate-fade-in-up animate-delay-200">
+            <p className="text-sm text-zinc-500 dark:text-zinc-400">
+              <span className="font-semibold text-zinc-700 dark:text-zinc-300">Let op:</span> Het bedrijf staat tot op heden nog steeds gevestigd op het adres:
+              <span className="font-mono ml-1 text-zinc-900 dark:text-zinc-200">Stein van Malsenstraat 19, 9842 PS</span>.
+              Dit was een huurwoning die intussen verkocht is; hij woont daar niet meer.
+            </p>
+          </div>
 
           <div className="flex flex-col sm:flex-row justify-center gap-4 animate-fade-in-up animate-delay-300">
             <Button asChild size="lg" className="bg-emerald-600 hover:bg-emerald-700 text-white border-none shadow-[0_0_20px_rgba(16,185,129,0.3)] text-lg px-8 h-12">

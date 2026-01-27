@@ -1,7 +1,5 @@
 "use client"
 
-import type React from "react"
-
 import { useState, useRef } from "react"
 import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
@@ -10,7 +8,22 @@ import { Label } from "@/components/ui/label"
 import { Checkbox } from "@/components/ui/checkbox"
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select"
 import { submitReport, type SubmitReportResult } from "@/lib/actions/submit-report"
-import { CheckCircle2, Upload, X, Loader2 } from "lucide-react"
+import {
+  CheckCircle2,
+  Upload,
+  X,
+  Loader2,
+  User,
+  Mail,
+  MapPin,
+  Calendar,
+  Euro,
+  CreditCard,
+  ShieldCheck,
+  FileText,
+  ArrowRight,
+  Info
+} from "lucide-react"
 
 export function ReportForm() {
   const [isSubmitting, setIsSubmitting] = useState(false)
@@ -53,204 +66,267 @@ export function ReportForm() {
   // Success screen
   if (result?.success) {
     return (
-      <div className="rounded-lg border border-border bg-card p-8 text-center">
-        <div className="mx-auto mb-4 flex h-16 w-16 items-center justify-center rounded-full bg-green-100 dark:bg-green-900/30">
-          <CheckCircle2 className="h-8 w-8 text-green-600 dark:text-green-500" />
+      <div className="rounded-2xl border border-emerald-200 dark:border-emerald-900/30 bg-emerald-50/50 dark:bg-emerald-900/10 p-12 text-center animate-fade-in">
+        <div className="mx-auto mb-6 flex h-20 w-20 items-center justify-center rounded-full bg-emerald-100 dark:bg-emerald-900/40">
+          <CheckCircle2 className="h-10 w-10 text-emerald-600 dark:text-emerald-400" />
         </div>
-        <h2 className="mb-2 text-2xl font-bold text-foreground">Melding ontvangen</h2>
-        <p className="mb-4 text-muted-foreground">Bedankt voor je melding. We hebben deze succesvol ontvangen.</p>
+        <h2 className="mb-3 text-3xl font-bold text-zinc-900 dark:text-white">Melding ontvangen</h2>
+        <p className="mb-6 text-zinc-600 dark:text-zinc-400 max-w-md mx-auto">
+          Je hebt de eerste stap gezet. Je melding is veilig ontvangen en wordt zorgvuldig verwerkt.
+        </p>
         {result.reportId && (
-          <div className="mb-6 rounded-md bg-muted p-3">
-            <p className="text-sm text-muted-foreground">Referentienummer:</p>
-            <p className="font-mono text-sm font-medium text-foreground">{result.reportId}</p>
+          <div className="mb-8 rounded-xl bg-white dark:bg-zinc-900 border border-zinc-200 dark:border-zinc-800 p-4 inline-block">
+            <p className="text-xs text-zinc-500 uppercase tracking-widest font-bold mb-1">Referentienummer</p>
+            <p className="font-mono text-lg font-medium text-zinc-900 dark:text-white">{result.reportId}</p>
           </div>
         )}
-        <p className="text-sm text-muted-foreground">
-          Als je een e-mailadres hebt opgegeven, ontvang je een bevestiging.
-        </p>
-        <Button
-          className="mt-6 bg-transparent"
-          variant="outline"
-          onClick={() => {
-            setResult(null)
-            setFiles([])
-            setConsent(false)
-            setLinkToOthers(false)
-            formRef.current?.reset()
-          }}
-        >
-          Nieuwe melding indienen
-        </Button>
+        <div className="flex flex-col sm:flex-row gap-4 justify-center">
+          <Button
+            className="h-12 px-8 bg-zinc-900 dark:bg-zinc-100 text-white dark:text-zinc-900"
+            onClick={() => {
+              setResult(null)
+              setFiles([])
+              setConsent(false)
+              setLinkToOthers(false)
+              formRef.current?.reset()
+            }}
+          >
+            Nieuwe melding indienen
+          </Button>
+          <Button variant="outline" className="h-12 px-8" asChild>
+            <a href="/">Terug naar home</a>
+          </Button>
+        </div>
       </div>
     )
   }
 
   return (
-    <form ref={formRef} onSubmit={handleSubmit} className="space-y-6">
+    <form ref={formRef} onSubmit={handleSubmit} className="space-y-8">
       {result && !result.success && (
-        <div className="rounded-md bg-red-50 p-4 text-red-800 dark:bg-red-900/30 dark:text-red-200">
-          {result.message}
+        <div className="rounded-xl border border-red-200 bg-red-50 p-4 text-red-800 dark:border-red-900/30 dark:bg-red-900/20 dark:text-red-300 flex items-center gap-3">
+          <X className="h-5 w-5 shrink-0" />
+          <p className="text-sm font-medium">{result.message}</p>
         </div>
       )}
 
-      <div className="space-y-4 rounded-lg border border-border bg-card/60 glass-card p-6">
-        <h3 className="font-semibold text-foreground">Contactgegevens</h3>
-
-        <div className="space-y-2">
-          <Label htmlFor="name">Naam (optioneel)</Label>
-          <Input id="name" name="name" placeholder="Je naam" />
-        </div>
-
-        <div className="space-y-2">
-          <Label htmlFor="contact">
-            E-mail of telefoonnummer <span className="text-red-500">*</span>
-          </Label>
-          <Input id="contact" name="contact" placeholder="email@voorbeeld.nl of 06-12345678" required />
-          <p className="text-xs text-muted-foreground">Minimaal 1 contactmogelijkheid is verplicht.</p>
-        </div>
-
-        <div className="space-y-2">
-          <Label htmlFor="city">Woonplaats (optioneel)</Label>
-          <Input id="city" name="city" placeholder="Je woonplaats" />
-        </div>
-
-        <div className="space-y-2">
-          <Label htmlFor="socialProfileUrl">Social media profiel (optioneel)</Label>
-          <Input id="socialProfileUrl" name="socialProfileUrl" type="url" placeholder="https://facebook.com/..." />
-          <p className="text-xs text-muted-foreground">
-            Link naar relevante social media (bijv. Facebook, Marktplaats)
+      {/* Intro visual */}
+      <div className="rounded-2xl bg-zinc-900 p-6 text-white overflow-hidden relative border border-white/5">
+        <div className="relative z-10">
+          <h3 className="text-xl font-bold mb-2 flex items-center gap-2">
+            <ShieldCheck className="text-emerald-400 h-6 w-6" />
+            Veilig en anoniem melden
+          </h3>
+          <p className="text-zinc-400 text-sm leading-relaxed max-w-lg">
+            We verzamelen alleen wat nodig is om het patroon aan te tonen. Geen overbodige privégegevens, geen rompslomp.
           </p>
+        </div>
+        <ShieldCheck className="absolute -right-8 -bottom-8 h-48 w-48 text-white/5 z-0 rotate-12" />
+      </div>
+
+      {/* Step 1: Contact */}
+      <div className="group relative">
+        <div className="absolute -left-4 top-0 bottom-0 w-1 bg-zinc-200 dark:bg-zinc-800 group-focus-within:bg-zinc-900 dark:group-focus-within:bg-zinc-100 transition-colors rounded-full" />
+        <div className="space-y-6 rounded-2xl border border-zinc-200 dark:border-zinc-800 bg-white dark:bg-zinc-900/50 p-6 md:p-8 shadow-sm">
+          <div className="flex items-center gap-3 mb-2">
+            <div className="flex h-8 w-8 items-center justify-center rounded-full bg-zinc-100 dark:bg-zinc-800 text-sm font-bold">1</div>
+            <h3 className="text-lg font-bold text-zinc-900 dark:text-white">Contactgegevens</h3>
+          </div>
+
+          <div className="grid gap-6 md:grid-cols-2">
+            <div className="space-y-2">
+              <Label htmlFor="name" className="flex items-center gap-2">
+                <User className="h-4 w-4 text-zinc-500" /> Naam <span className="text-xs text-zinc-400 font-normal">(Mag anoniem)</span>
+              </Label>
+              <Input id="name" name="name" placeholder="Je naam" className="h-11 bg-zinc-50 dark:bg-zinc-900" />
+            </div>
+
+            <div className="space-y-2">
+              <Label htmlFor="contact" className="flex items-center gap-2">
+                <Mail className="h-4 w-4 text-zinc-500" /> E-mail of telefoon <span className="text-red-500">*</span>
+              </Label>
+              <Input id="contact" name="contact" placeholder="Hoe bereiken we je?" required className="h-11 bg-zinc-50 dark:bg-zinc-900" />
+            </div>
+          </div>
+
+          <div className="grid gap-6 md:grid-cols-2">
+            <div className="space-y-2">
+              <Label htmlFor="city" className="flex items-center gap-2">
+                <MapPin className="h-4 w-4 text-zinc-500" /> Woonplaats
+              </Label>
+              <Input id="city" name="city" placeholder="Je stad" className="h-11 bg-zinc-50 dark:bg-zinc-900" />
+            </div>
+
+            <div className="space-y-2">
+              <Label htmlFor="socialProfileUrl" className="flex items-center gap-2 text-zinc-400">
+                <Info className="h-4 w-4" /> Social media profiel <span className="text-xs font-normal">(Optioneel)</span>
+              </Label>
+              <Input id="socialProfileUrl" name="socialProfileUrl" type="url" placeholder="https://..." className="h-11 bg-zinc-50 dark:bg-zinc-900 opacity-60" />
+            </div>
+          </div>
         </div>
       </div>
 
-      <div className="space-y-4 rounded-lg border border-border bg-card/60 glass-card p-6">
-        <h3 className="font-semibold text-foreground">Details van het incident</h3>
+      {/* Step 2: Details */}
+      <div className="group relative">
+        <div className="absolute -left-4 top-0 bottom-0 w-1 bg-zinc-200 dark:bg-zinc-800 group-focus-within:bg-zinc-900 dark:group-focus-within:bg-zinc-100 transition-colors rounded-full" />
+        <div className="space-y-6 rounded-2xl border border-zinc-200 dark:border-zinc-800 bg-white dark:bg-zinc-900/50 p-6 md:p-8 shadow-sm">
+          <div className="flex items-center gap-3 mb-2">
+            <div className="flex h-8 w-8 items-center justify-center rounded-full bg-zinc-100 dark:bg-zinc-800 text-sm font-bold">2</div>
+            <h3 className="text-lg font-bold text-zinc-900 dark:text-white">Het Incident</h3>
+          </div>
 
-        <div className="space-y-2">
-          <Label htmlFor="dateOfIncident">Datum eerste contact</Label>
-          <Input id="dateOfIncident" name="dateOfIncident" type="date" />
-        </div>
+          <div className="grid gap-6 md:grid-cols-3">
+            <div className="space-y-2">
+              <Label htmlFor="dateOfIncident" className="flex items-center gap-2">
+                <Calendar className="h-4 w-4 text-zinc-500" /> Datum eerste contact
+              </Label>
+              <Input id="dateOfIncident" name="dateOfIncident" type="date" className="h-11 bg-zinc-50 dark:bg-zinc-900" />
+            </div>
 
-        <div className="grid gap-4 sm:grid-cols-2">
-          <div className="space-y-2">
-            <Label htmlFor="amount">Betaald bedrag</Label>
-            <Input id="amount" name="amount" type="number" step="0.01" placeholder="€ 0,00" />
+            <div className="space-y-2">
+              <Label htmlFor="amount" className="flex items-center gap-2">
+                <Euro className="h-4 w-4 text-zinc-500" /> Betaald bedrag
+              </Label>
+              <Input id="amount" name="amount" type="number" step="0.01" placeholder="€ 0,00" className="h-11 bg-zinc-50 dark:bg-zinc-900" />
+            </div>
+
+            <div className="space-y-2">
+              <Label htmlFor="paymentMethod" className="flex items-center gap-2">
+                <CreditCard className="h-4 w-4 text-zinc-500" /> Betaalmethode
+              </Label>
+              <Select name="paymentMethod">
+                <SelectTrigger className="h-11 bg-zinc-50 dark:bg-zinc-900">
+                  <SelectValue placeholder="Selecteer..." />
+                </SelectTrigger>
+                <SelectContent>
+                  <SelectItem value="ideal">iDEAL</SelectItem>
+                  <SelectItem value="overboeking">Overboeking</SelectItem>
+                  <SelectItem value="contant">Contant</SelectItem>
+                  <SelectItem value="tikkie">Tikkie</SelectItem>
+                  <SelectItem value="anders">Anders</SelectItem>
+                </SelectContent>
+              </Select>
+            </div>
           </div>
 
           <div className="space-y-2">
-            <Label htmlFor="paymentMethod">Betaalmethode</Label>
-            <Select name="paymentMethod">
-              <SelectTrigger>
-                <SelectValue placeholder="Selecteer..." />
-              </SelectTrigger>
-              <SelectContent>
-                <SelectItem value="ideal">iDEAL</SelectItem>
-                <SelectItem value="overboeking">Overboeking</SelectItem>
-                <SelectItem value="contant">Contant</SelectItem>
-                <SelectItem value="tikkie">Tikkie</SelectItem>
-                <SelectItem value="anders">Anders</SelectItem>
-              </SelectContent>
-            </Select>
+            <Label htmlFor="description" className="flex items-center gap-2">
+              <FileText className="h-4 w-4 text-zinc-500" /> Jouw verhaal <span className="text-red-500">*</span>
+            </Label>
+            <Textarea
+              id="description"
+              name="description"
+              placeholder="Wat is er precies gebeurd? Hoe meer details, hoe sterker we staan."
+              rows={6}
+              required
+              minLength={10}
+              className="bg-zinc-50 dark:bg-zinc-900 resize-none"
+            />
           </div>
         </div>
+      </div>
 
-        <div className="space-y-2">
-          <Label htmlFor="description">
-            Beschrijving <span className="text-red-500">*</span>
-          </Label>
-          <Textarea
-            id="description"
-            name="description"
-            placeholder="Beschrijf wat er is gebeurd..."
-            rows={5}
-            required
-            minLength={10}
+      {/* Step 3: Evidence */}
+      <div className="group relative">
+        <div className="absolute -left-4 top-0 bottom-0 w-1 bg-zinc-200 dark:bg-zinc-800 group-focus-within:bg-zinc-900 dark:group-focus-within:bg-zinc-100 transition-colors rounded-full" />
+        <div className="space-y-6 rounded-2xl border border-zinc-200 dark:border-zinc-800 bg-white dark:bg-zinc-900/50 p-6 md:p-8 shadow-sm">
+          <div className="flex items-center gap-3 mb-2">
+            <div className="flex h-8 w-8 items-center justify-center rounded-full bg-zinc-100 dark:bg-zinc-800 text-sm font-bold">3</div>
+            <h3 className="text-lg font-bold text-zinc-900 dark:text-white">Bewijsmateriaal</h3>
+          </div>
+
+          <p className="text-sm text-zinc-500 dark:text-zinc-400">
+            Upload screenshots van gesprekken, betalingsbewijzen of de offerte. Dit helpt ons bij de verificatie.
+          </p>
+
+          <div
+            className="cursor-pointer rounded-xl border-2 border-dashed border-zinc-200 dark:border-zinc-800 p-8 text-center transition-all hover:bg-zinc-50 dark:hover:bg-zinc-900/80 hover:border-zinc-300 dark:hover:border-zinc-700"
+            onClick={() => fileInputRef.current?.click()}
+          >
+            <div className="mx-auto mb-3 flex h-12 w-12 items-center justify-center rounded-full bg-zinc-100 dark:bg-zinc-800">
+              <Upload className="h-6 w-6 text-zinc-600 dark:text-zinc-300" />
+            </div>
+            <p className="text-sm font-medium text-zinc-900 dark:text-white">Selecteer bestanden</p>
+            <p className="text-xs text-zinc-500 mt-1">PNG, JPG, PDF (max. 10MB per bestand)</p>
+          </div>
+
+          <input
+            ref={fileInputRef}
+            type="file"
+            multiple
+            accept="image/*,.pdf"
+            onChange={handleFileChange}
+            className="hidden"
           />
-          <p className="text-xs text-muted-foreground">
-            Minimaal 10 karakters. Beschrijf de situatie zo duidelijk mogelijk.
-          </p>
+
+          {files.length > 0 && (
+            <div className="grid gap-2 sm:grid-cols-2">
+              {files.map((file, index) => (
+                <div key={index} className="flex items-center justify-between rounded-lg border border-zinc-200 dark:border-zinc-800 bg-zinc-50 dark:bg-zinc-900 p-3">
+                  <div className="flex items-center gap-2 min-w-0">
+                    <FileText className="h-4 w-4 text-zinc-400 shrink-0" />
+                    <span className="truncate text-xs font-medium text-zinc-700 dark:text-zinc-300">{file.name}</span>
+                  </div>
+                  <button
+                    type="button"
+                    onClick={() => removeFile(index)}
+                    className="ml-2 text-zinc-400 hover:text-red-500 transition-colors"
+                  >
+                    <X className="h-4 w-4" />
+                  </button>
+                </div>
+              ))}
+            </div>
+          )}
         </div>
       </div>
 
-      <div className="space-y-4 rounded-lg border border-border bg-card/60 glass-card p-6">
-        <h3 className="font-semibold text-foreground">Bewijsmateriaal</h3>
-        <p className="text-sm text-muted-foreground">
-          Upload screenshots, PDF&apos;s of foto&apos;s ter ondersteuning van je melding.
+      {/* Consent & Submit */}
+      <div className="space-y-6">
+        <div className="rounded-2xl border border-zinc-200 dark:border-zinc-800 bg-zinc-50 dark:bg-zinc-900/30 p-6 md:p-8 space-y-5">
+          <div className="flex items-start space-x-3">
+            <Checkbox id="consent" checked={consent} onCheckedChange={(checked) => setConsent(checked === true)} className="mt-1" />
+            <div className="space-y-1">
+              <Label htmlFor="consent" className="cursor-pointer font-bold text-zinc-900 dark:text-white">
+                Akkoord met de voorwaarden <span className="text-red-500">*</span>
+              </Label>
+              <p className="text-xs text-zinc-500 dark:text-zinc-400 leading-relaxed">
+                Ik verklaar dat ik de informatie naar waarheid heb ingevuld en geef toestemming om mijn melding anoniem te verwerken in het collectieve dossier.
+              </p>
+            </div>
+          </div>
+
+          <div className="flex items-start space-x-3">
+            <Checkbox id="linkToOthers" checked={linkToOthers} onCheckedChange={(checked) => setLinkToOthers(checked === true)} className="mt-1" />
+            <div className="space-y-1">
+              <Label htmlFor="linkToOthers" className="cursor-pointer font-bold text-zinc-900 dark:text-white">
+                Breng mij in contact met andere melders
+              </Label>
+              <p className="text-xs text-zinc-500 dark:text-zinc-400 leading-relaxed">
+                Optioneel. Als er meer melders in jouw regio of met hetzelfde verhaal zijn, kunnen we jullie anoniem koppelen voor collectieve actie.
+              </p>
+            </div>
+          </div>
+        </div>
+
+        <Button type="submit" className="w-full h-14 text-lg font-bold shadow-lg" size="lg" disabled={isSubmitting || !consent}>
+          {isSubmitting ? (
+            <>
+              <Loader2 className="mr-2 h-5 w-5 animate-spin" />
+              Melding wordt beveiligd verzonden...
+            </>
+          ) : (
+            <>
+              Melding definitief versturen
+              <ArrowRight className="ml-2 h-5 w-5" />
+            </>
+          )}
+        </Button>
+        <p className="text-center text-xs text-zinc-500 italic">
+          Heb je vragen? Neem contact met ons op via meld@ekvloeren-ervaringen.nl
         </p>
-
-        <div
-          className="cursor-pointer rounded-lg border-2 border-dashed border-border p-6 text-center transition-colors hover:border-muted-foreground/50"
-          onClick={() => fileInputRef.current?.click()}
-        >
-          <Upload className="mx-auto mb-2 h-8 w-8 text-muted-foreground" />
-          <p className="text-sm text-muted-foreground">Klik om bestanden te selecteren</p>
-          <p className="text-xs text-muted-foreground">PNG, JPG, PDF (max. 10MB per bestand)</p>
-        </div>
-
-        <input
-          ref={fileInputRef}
-          type="file"
-          multiple
-          accept="image/*,.pdf"
-          onChange={handleFileChange}
-          className="hidden"
-        />
-
-        {files.length > 0 && (
-          <ul className="space-y-2">
-            {files.map((file, index) => (
-              <li key={index} className="flex items-center justify-between rounded-md bg-muted px-3 py-2">
-                <span className="truncate text-sm text-foreground">{file.name}</span>
-                <button
-                  type="button"
-                  onClick={() => removeFile(index)}
-                  className="ml-2 text-muted-foreground hover:text-foreground"
-                >
-                  <X className="h-4 w-4" />
-                </button>
-              </li>
-            ))}
-          </ul>
-        )}
       </div>
-
-      <div className="space-y-4 rounded-lg border border-border bg-card/60 glass-card p-6">
-        <div className="flex items-start space-x-3">
-          <Checkbox id="consent" checked={consent} onCheckedChange={(checked) => setConsent(checked === true)} />
-          <div className="space-y-1">
-            <Label htmlFor="consent" className="cursor-pointer font-normal">
-              Ik ga akkoord met de voorwaarden <span className="text-red-500">*</span>
-            </Label>
-            <p className="text-xs text-muted-foreground">
-              Ik geef toestemming om contact met mij op te nemen en bevestig dat de informatie naar waarheid is
-              ingevuld.
-            </p>
-          </div>
-        </div>
-
-        <div className="flex items-start space-x-3">
-          <Checkbox id="linkToOthers" checked={linkToOthers} onCheckedChange={(checked) => setLinkToOthers(checked === true)} />
-          <div className="space-y-1">
-            <Label htmlFor="linkToOthers" className="cursor-pointer font-normal">
-              Koppel mij (privé) aan andere melders
-            </Label>
-            <p className="text-xs text-muted-foreground">
-              Optioneel. Als er vergelijkbare meldingen zijn, kunnen we je anoniem met elkaar in contact brengen.
-            </p>
-          </div>
-        </div>
-      </div>
-
-      <Button type="submit" className="w-full" size="lg" disabled={isSubmitting || !consent}>
-        {isSubmitting ? (
-          <>
-            <Loader2 className="mr-2 h-4 w-4 animate-spin" />
-            Verzenden...
-          </>
-        ) : (
-          "Melding versturen"
-        )}
-      </Button>
     </form>
   )
 }

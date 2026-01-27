@@ -2,9 +2,10 @@
 
 import { revalidatePath } from "next/cache"
 
-import { sql, type Report, type ReportFile, type ReportStatus } from "@/lib/db"
+import { sql, type Report, type ReportFile, type ReportStatus, type User } from "@/lib/db"
 import { reportSchema, checkForModeration } from "@/lib/validations/report"
 import { put } from "@vercel/blob"
+import { getAdminSession } from "./admin-auth"
 
 export interface SubmitReportResult {
   success: boolean
@@ -159,10 +160,13 @@ export async function submitReport(formData: FormData): Promise<SubmitReportResu
 
 export async function createManualReport(data: any): Promise<void> {
   try {
+    const session = await getAdminSession()
+    if (!session) throw new Error("Unauthorized")
+
     await sql`
       INSERT INTO reports (
         name, contact, city, date_of_incident, amount, 
-        description, status, internal_notes
+        description, status, internal_notes, admin_id
       ) VALUES (
         ${data.name || null},
         ${data.contact},
@@ -171,7 +175,8 @@ export async function createManualReport(data: any): Promise<void> {
         ${data.amount ? Number.parseFloat(data.amount) : null},
         ${data.description},
         ${data.status},
-        'Handmatig toegevoegd via dashboard'
+        'Handmatig toegevoegd via dashboard',
+        ${session.id}
       )
     `
     revalidatePath("/admin")
@@ -185,26 +190,47 @@ export async function createManualReport(data: any): Promise<void> {
 export async function getReports(status: ReportStatus | "all" = "all", query = ""): Promise<any[]> {
   try {
     let reports
+    const baseQuery = sql`
+      SELECT r.*, u.full_name as admin_name 
+      FROM reports r 
+      LEFT JOIN users u ON r.admin_id = u.id
+    `
+
     if (status === "all") {
       if (query) {
         reports = await sql`
-          SELECT * FROM reports 
-          WHERE (name ILIKE ${`%${query}%`} OR contact ILIKE ${`%${query}%`} OR city ILIKE ${`%${query}%`})
-          ORDER BY created_at DESC
+          SELECT r.*, u.full_name as admin_name 
+          FROM reports r 
+          LEFT JOIN users u ON r.admin_id = u.id
+          WHERE (r.name ILIKE ${`%${query}%`} OR r.contact ILIKE ${`%${query}%`} OR r.city ILIKE ${`%${query}%`})
+          ORDER BY r.created_at DESC
         `
       } else {
-        reports = await sql`SELECT * FROM reports ORDER BY created_at DESC`
+        reports = await sql`
+          SELECT r.*, u.full_name as admin_name 
+          FROM reports r 
+          LEFT JOIN users u ON r.admin_id = u.id
+          ORDER BY r.created_at DESC
+        `
       }
     } else {
       if (query) {
         reports = await sql`
-          SELECT * FROM reports 
-          WHERE status = ${status} 
-          AND (name ILIKE ${`%${query}%`} OR contact ILIKE ${`%${query}%`} OR city ILIKE ${`%${query}%`})
-          ORDER BY created_at DESC
+          SELECT r.*, u.full_name as admin_name 
+          FROM reports r 
+          LEFT JOIN users u ON r.admin_id = u.id
+          WHERE r.status = ${status} 
+          AND (r.name ILIKE ${`%${query}%`} OR r.contact ILIKE ${`%${query}%`} OR r.city ILIKE ${`%${query}%`})
+          ORDER BY r.created_at DESC
         `
       } else {
-        reports = await sql`SELECT * FROM reports WHERE status = ${status} ORDER BY created_at DESC`
+        reports = await sql`
+          SELECT r.*, u.full_name as admin_name 
+          FROM reports r 
+          LEFT JOIN users u ON r.admin_id = u.id
+          WHERE r.status = ${status} 
+          ORDER BY r.created_at DESC
+        `
       }
     }
 
@@ -229,9 +255,14 @@ export async function updateReportStatus(
   linkToReportId?: string,
 ): Promise<void> {
   try {
+    const session = await getAdminSession()
+    if (!session) throw new Error("Unauthorized")
+
     await sql`
       UPDATE reports 
-      SET status = ${newStatus}, link_to_report_id = ${linkToReportId || null}
+      SET status = ${newStatus}, 
+          link_to_report_id = ${linkToReportId || null},
+          admin_id = ${session.id}
       WHERE id = ${reportId}
     `
     revalidatePath("/admin")
@@ -244,9 +275,13 @@ export async function updateReportStatus(
 
 export async function updateReportNotes(reportId: string, notes: string): Promise<void> {
   try {
+    const session = await getAdminSession()
+    if (!session) throw new Error("Unauthorized")
+
     await sql`
       UPDATE reports 
-      SET internal_notes = ${notes}
+      SET internal_notes = ${notes},
+          admin_id = ${session.id}
       WHERE id = ${reportId}
     `
     revalidatePath("/admin")

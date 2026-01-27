@@ -22,6 +22,18 @@ export interface Report {
   link_to_others: boolean
   link_to_report_id: string | null
   internal_notes: string | null
+  admin_id: string | null
+}
+
+export type AdminRole = "admin" | "superadmin"
+
+export interface User {
+  id: string
+  username: string
+  password_hash: string
+  full_name: string
+  role: AdminRole
+  created_at: Date
 }
 
 export interface ReportFile {

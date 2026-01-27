@@ -9,5 +9,9 @@ export const reportFiles = {
   name: "report_files",
 } as const
 
+export const users = {
+  name: "users",
+} as const
+
 // Re-export types from index for convenience
-export type { Report, ReportFile, ReportStatus, Settings } from "./index"
+export type { Report, ReportFile, ReportStatus, Settings, User, AdminRole } from "./index"

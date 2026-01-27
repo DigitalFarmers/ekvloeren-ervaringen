@@ -1,5 +1,6 @@
 import type { Metadata } from "next"
 import { ReportForm } from "@/components/report-form"
+import { ShieldCheck, Lock, EyeOff } from "lucide-react"
 
 export const metadata: Metadata = {
   title: "Meld je ervaring | EK Vloeren Ervaringen",
@@ -9,24 +10,34 @@ export const metadata: Metadata = {
 export default function MeldJePage() {
   return (
     <main className="min-h-screen bg-background">
-      <div className="mx-auto max-w-2xl px-4 py-12">
-        <div className="mb-8">
-          <h1 className="text-3xl font-bold tracking-tight text-foreground">Meld je ervaring</h1>
-          <p className="mt-2 text-muted-foreground">
-            Deel je ervaring met EK Vloeren. Alle meldingen worden vertrouwelijk behandeld.
+      <div className="mx-auto max-w-3xl px-4 py-16 md:py-24">
+        <div className="mb-12 text-center">
+          <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-emerald-100 dark:bg-emerald-900/30 text-emerald-700 dark:text-emerald-400 text-xs font-bold uppercase tracking-wider mb-4 border border-emerald-200 dark:border-emerald-800">
+            <ShieldCheck className="h-3 w-3" />
+            Beveiligde omgeving
+          </div>
+          <h1 className="text-4xl font-bold tracking-tight text-zinc-900 dark:text-white sm:text-5xl mb-4">Deel je ervaring</h1>
+          <p className="text-lg text-zinc-600 dark:text-zinc-400 max-w-xl mx-auto">
+            Help ons patronen zichtbaar te maken. Je melding wordt vertrouwelijk en met zorg behandeld.
           </p>
         </div>
 
-        <div className="mb-8 rounded-lg border border-border bg-card/60 glass-card p-4">
-          <h2 className="mb-2 font-semibold text-foreground">Wat we NIET vragen</h2>
-          <ul className="space-y-1 text-sm text-muted-foreground">
-            <li>• BSN of identiteitsbewijs</li>
-            <li>• Banklogins of wachtwoorden</li>
-            <li>• Adressen van derden</li>
-          </ul>
-          <p className="mt-3 text-sm text-amber-600 dark:text-amber-500">
-            Let op: Deel geen privégegevens van kinderen of volledige adressen.
-          </p>
+        <div className="grid gap-4 md:grid-cols-3 mb-10">
+          <div className="rounded-xl border border-zinc-200 dark:border-zinc-800 p-4 bg-zinc-50 dark:bg-zinc-900/50 flex flex-col items-center text-center">
+            <Lock className="h-5 w-5 text-zinc-400 mb-2" />
+            <h3 className="text-xs font-bold uppercase tracking-widest text-zinc-500 mb-1">Vertrouwelijk</h3>
+            <p className="text-xs text-zinc-400">Alleen beheerders zien je gegevens.</p>
+          </div>
+          <div className="rounded-xl border border-zinc-200 dark:border-zinc-800 p-4 bg-zinc-50 dark:bg-zinc-900/50 flex flex-col items-center text-center">
+            <EyeOff className="h-5 w-5 text-zinc-400 mb-2" />
+            <h3 className="text-xs font-bold uppercase tracking-widest text-zinc-500 mb-1">Wat we NIET vragen</h3>
+            <p className="text-xs text-zinc-400">Geen BSN, ID of wachtwoorden.</p>
+          </div>
+          <div className="rounded-xl border border-zinc-200 dark:border-zinc-800 p-4 bg-zinc-50 dark:bg-zinc-900/50 flex flex-col items-center text-center">
+            <ShieldCheck className="h-5 w-5 text-zinc-400 mb-2" />
+            <h3 className="text-xs font-bold uppercase tracking-widest text-zinc-500 mb-1">Veiligheid</h3>
+            <p className="text-xs text-zinc-400">Gezamenlijk dossier tegen misleiding.</p>
+          </div>
         </div>
 
         <ReportForm />

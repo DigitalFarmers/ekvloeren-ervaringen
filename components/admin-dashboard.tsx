@@ -51,6 +51,7 @@ import {
 
 interface ReportWithFiles extends Report {
   files: ReportFile[]
+  admin_name?: string
 }
 
 const statusConfig: Record<ReportStatus, { label: string; color: string; icon: React.ReactNode }> = {
@@ -230,7 +231,14 @@ export function AdminDashboard() {
                         <span className="ml-1">{statusConfig[report.status].label}</span>
                       </Badge>
                     </div>
-                    <p className="mt-1 font-mono text-xs text-muted-foreground">{report.id}</p>
+                    <p className="mt-1 font-mono text-xs text-muted-foreground">
+                      {report.id}
+                      {report.admin_name && (
+                        <span className="ml-2 rounded bg-zinc-100 dark:bg-zinc-800 px-1 py-0.5 font-sans text-[10px] font-bold uppercase tracking-wider text-zinc-500">
+                          Beheer door: {report.admin_name}
+                        </span>
+                      )}
+                    </p>
                   </div>
                   <time className="text-sm text-muted-foreground">
                     {new Date(report.created_at).toLocaleDateString("nl-NL", {
@@ -283,7 +291,14 @@ export function AdminDashboard() {
                     {statusConfig[selectedReport.status].label}
                   </Badge>
                 </DialogTitle>
-                <DialogDescription className="font-mono text-xs">{selectedReport.id}</DialogDescription>
+                <DialogDescription className="flex items-center gap-2 font-mono text-xs">
+                  {selectedReport.id}
+                  {selectedReport.admin_name && (
+                    <span className="rounded bg-zinc-100 dark:bg-zinc-800 px-1.5 py-0.5 font-sans text-[10px] font-bold uppercase tracking-wider text-zinc-500">
+                      Beheer: {selectedReport.admin_name}
+                    </span>
+                  )}
+                </DialogDescription>
               </DialogHeader>
 
               <div className="space-y-4">
