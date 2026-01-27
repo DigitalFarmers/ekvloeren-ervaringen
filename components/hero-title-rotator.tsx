@@ -12,22 +12,23 @@ export function HeroTitleRotator() {
         }, 3000)
 
         return () => clearInterval(interval)
-    }, [texts.length])
+    }, [])
 
     return (
-        <span className="relative inline-flex flex-col h-[1.2em] overflow-hidden align-bottom w-full max-w-[320px] sm:max-w-[450px] justify-center text-red-600">
+        <span className="relative inline-block min-w-[280px] text-left">
             {texts.map((text, i) => (
                 <span
-                    key={text}
-                    className={`absolute inset-0 flex items-center justify-center transition-all duration-1000 ease-in-out ${i === index
-                        ? "opacity-100 translate-y-0 scale-100"
-                        : "opacity-0 -translate-y-8 scale-95"
+                    key={i}
+                    className={`absolute left-0 top-0 transition-all duration-700 ease-in-out ${i === index
+                            ? "opacity-100 translate-y-0 scale-100"
+                            : "opacity-0 translate-y-4 scale-95 pointer-events-none"
                         }`}
-                    aria-hidden={i !== index}
+                    style={{ color: "hsl(var(--destructive))" }}
                 >
                     {text}
                 </span>
             ))}
+            <span className="invisible" aria-hidden="true">{texts[0]}</span>
         </span>
     )
 }

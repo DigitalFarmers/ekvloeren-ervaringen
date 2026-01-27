@@ -6,6 +6,17 @@ export const db = sql
 
 export type ReportStatus = "pending" | "approved" | "rejected" | "needs_info" | "duplicate"
 
+export interface AdminUser {
+  id: string
+  username: string
+  email: string
+  password_hash: string
+  full_name: string | null
+  created_at: Date
+  last_login: Date | null
+  is_active: boolean
+}
+
 export interface Report {
   id: string
   created_at: Date
@@ -21,20 +32,12 @@ export interface Report {
   consent: boolean
   link_to_others: boolean
   link_to_report_id: string | null
-  internal_notes: string | null
-  admin_id: string | null
+  admin_notes: string | null
+  created_by_admin_id: string | null
+  updated_by_admin_id: string | null
+  updated_at: Date | null
 }
 
-export type AdminRole = "admin" | "superadmin"
-
-export interface User {
-  id: string
-  username: string
-  password_hash: string
-  full_name: string
-  role: AdminRole
-  created_at: Date
-}
 
 export interface ReportFile {
   id: string
