@@ -27,8 +27,8 @@ export default function HomePage() {
         <div className="absolute inset-0 bg-gradient-to-b from-background via-background/90 to-background z-0" />
 
         <div className="relative z-10 mx-auto max-w-5xl px-4 sm:px-6 lg:px-8 text-center">
-          <h1 className="text-4xl font-bold tracking-tight text-zinc-900 dark:text-white mb-6 sm:text-6xl lg:text-7xl font-heading leading-tight animate-fade-in-up flex flex-col items-center justify-center gap-2 sm:block">
-            Geld kwijt aan <HeroTitleRotator />?
+          <h1 className="text-4xl font-bold tracking-tight text-zinc-900 dark:text-white mb-6 sm:text-6xl lg:text-7xl font-heading leading-tight animate-fade-in-up">
+            Geld kwijt aan <span className="inline-block whitespace-nowrap"><HeroTitleRotator /></span>?
           </h1>
 
           <ul className="flex flex-col md:flex-row justify-center gap-4 text-lg md:text-xl text-zinc-600 dark:text-zinc-300 mb-10 font-medium animate-fade-in-up animate-delay-100">
@@ -67,6 +67,11 @@ export default function HomePage() {
             <Button asChild variant="outline" size="lg" className="border-zinc-300 text-zinc-700 hover:bg-zinc-100 hover:text-zinc-900 dark:border-zinc-700 dark:text-zinc-300 dark:hover:bg-zinc-800 dark:hover:text-white h-12 px-8">
               <Link href="/hoe-werkt-dit">
                 Bekijk hoe het werkt
+              </Link>
+            </Button>
+            <Button asChild variant="ghost" size="lg" className="text-zinc-500 hover:text-zinc-900 dark:text-zinc-400 dark:hover:text-white h-12 px-8">
+              <Link href="/admin/analyse">
+                Diepe Analyse
               </Link>
             </Button>
           </div>

@@ -2,7 +2,7 @@
 
 import { revalidatePath } from "next/cache"
 
-import { sql, type Report, type ReportFile, type ReportStatus, type User } from "@/lib/db"
+import { sql, type Report, type ReportFile, type ReportStatus, type AdminUser } from "@/lib/db"
 import { reportSchema, checkForModeration } from "@/lib/validations/report"
 import { put } from "@vercel/blob"
 import { getAdminSession } from "./admin-auth"
@@ -22,6 +22,8 @@ export async function submitReport(formData: FormData): Promise<SubmitReportResu
       dateOfIncident: formData.get("dateOfIncident") as string,
       amount: formData.get("amount") as string,
       paymentMethod: formData.get("paymentMethod") as string,
+      defectCategory: formData.get("defectCategory") as string,
+      defectDetails: formData.get("defectDetails") as string,
       description: formData.get("description") as string,
       socialProfileUrl: formData.get("socialProfileUrl") as string,
       consent: formData.get("consent") === "true",
@@ -46,6 +48,7 @@ export async function submitReport(formData: FormData): Promise<SubmitReportResu
     const result = await sql`
       INSERT INTO reports (
         name, contact, city, date_of_incident, amount, payment_method,
+        defect_category, defect_details,
         description, social_profile_url, consent, link_to_others, status, internal_notes
       ) VALUES (
         ${data.name || null},
@@ -54,6 +57,8 @@ export async function submitReport(formData: FormData): Promise<SubmitReportResu
         ${data.dateOfIncident || null},
         ${data.amount ? Number.parseFloat(data.amount) : null},
         ${data.paymentMethod || null},
+        ${data.defectCategory},
+        ${data.defectDetails || null},
         ${data.description},
         ${data.socialProfileUrl || null},
         ${data.consent},
@@ -166,7 +171,8 @@ export async function createManualReport(data: any): Promise<void> {
     await sql`
       INSERT INTO reports (
         name, contact, city, date_of_incident, amount, 
-        description, status, internal_notes, admin_id
+        description, status, internal_notes, created_by_admin_id,
+        defect_category
       ) VALUES (
         ${data.name || null},
         ${data.contact},
@@ -176,7 +182,8 @@ export async function createManualReport(data: any): Promise<void> {
         ${data.description},
         ${data.status},
         'Handmatig toegevoegd via dashboard',
-        ${session.id}
+        ${session.id},
+        ${data.defectCategory || 'anders'}
       )
     `
     revalidatePath("/admin")

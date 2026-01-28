@@ -204,12 +204,33 @@ export function ReportFormEnhanced() {
                             </div>
                         </div>
 
+                        {/* Defect Category */}
+                        <div className="space-y-2">
+                            <Label htmlFor="defectCategory" className="text-zinc-700 dark:text-zinc-300 flex items-center gap-1">
+                                Type gebrek <span className="text-red-500">*</span>
+                            </Label>
+                            <Select name="defectCategory" required>
+                                <SelectTrigger className="h-12 bg-zinc-50 dark:bg-zinc-800 border-zinc-300 dark:border-zinc-700">
+                                    <SelectValue placeholder="Kies het type gebrek..." />
+                                </SelectTrigger>
+                                <SelectContent>
+                                    <SelectItem value="scheuren">Scheuren in de vloer</SelectItem>
+                                    <SelectItem value="loslaten">Loslaten / Hechting</SelectItem>
+                                    <SelectItem value="verkleuring">Verkleuring / Vlekken</SelectItem>
+                                    <SelectItem value="vocht">Vochtproblemen / Blaasjes</SelectItem>
+                                    <SelectItem value="oneffenheden">Oneffenheden / Bubbels</SelectItem>
+                                    <SelectItem value="communicatie">Alleen communicatie/service</SelectItem>
+                                    <SelectItem value="anders">Anders</SelectItem>
+                                </SelectContent>
+                            </Select>
+                        </div>
+
                         {/* Payment method */}
                         <div className="space-y-2">
                             <Label htmlFor="payment_method" className="text-zinc-700 dark:text-zinc-300">
                                 Betaalmethode <span className="text-xs text-zinc-500 dark:text-zinc-400 font-normal">(optioneel)</span>
                             </Label>
-                            <Select name="payment_method">
+                            <Select name="paymentMethod">
                                 <SelectTrigger className="h-12 bg-zinc-50 dark:bg-zinc-800 border-zinc-300 dark:border-zinc-700">
                                     <SelectValue placeholder="Selecteer..." />
                                 </SelectTrigger>

@@ -32,10 +32,12 @@ export interface Report {
   consent: boolean
   link_to_others: boolean
   link_to_report_id: string | null
-  admin_notes: string | null
+  internal_notes: string | null
   created_by_admin_id: string | null
   updated_by_admin_id: string | null
   updated_at: Date | null
+  defect_category: string | null
+  defect_details: string | null
 }
 
 

@@ -17,6 +17,8 @@ export const reportSchema = z.object({
   dateOfIncident: z.string().optional(),
   amount: z.string().optional(),
   paymentMethod: z.string().optional(),
+  defectCategory: z.string().min(1, "Selecteer een type gebrek"),
+  defectDetails: z.string().optional(),
   description: z.string().min(10, "Beschrijving moet minimaal 10 karakters bevatten"),
   socialProfileUrl: z.string().url().optional().or(z.literal("")),
   consent: z.boolean().refine((val) => val === true, {

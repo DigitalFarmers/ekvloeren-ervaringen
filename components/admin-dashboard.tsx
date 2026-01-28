@@ -47,7 +47,9 @@ import {
   Settings,
   Loader2,
   Plus,
+  BarChart,
 } from "lucide-react"
+import Link from "next/link"
 
 interface ReportWithFiles extends Report {
   files: ReportFile[]
@@ -140,6 +142,7 @@ export function AdminDashboard() {
       amount: formData.get("amount") as string,
       dateOfIncident: formData.get("dateOfIncident") as string,
       description: formData.get("description") as string,
+      defectCategory: formData.get("defectCategory") as string,
       status: "approved" as ReportStatus, // Default to approved for manual entry
     }
 
@@ -163,6 +166,12 @@ export function AdminDashboard() {
             </p>
           </div>
           <div className="flex items-center gap-2">
+            <Button variant="outline" size="sm" asChild>
+              <Link href="/admin/analyse">
+                <BarChart className="mr-2 h-4 w-4" />
+                Diepe Analyse
+              </Link>
+            </Button>
             <Button variant="outline" size="sm" onClick={() => setShowSettingsDialog(true)}>
               <Settings className="mr-2 h-4 w-4" />
               Instellingen
@@ -584,9 +593,28 @@ export function AdminDashboard() {
                 <Input name="dateOfIncident" type="date" />
               </div>
             </div>
-            <div className="space-y-2">
-              <label className="text-sm font-medium">Bedrag (€)</label>
-              <Input name="amount" type="number" step="0.01" placeholder="0.00" />
+            <div className="grid grid-cols-2 gap-4">
+              <div className="space-y-2">
+                <label className="text-sm font-medium">Bedrag (€)</label>
+                <Input name="amount" type="number" step="0.01" placeholder="0.00" />
+              </div>
+              <div className="space-y-2">
+                <label className="text-sm font-medium">Type gebrek</label>
+                <Select name="defectCategory" required defaultValue="anders">
+                  <SelectTrigger className="w-full">
+                    <SelectValue placeholder="Kies gebrek..." />
+                  </SelectTrigger>
+                  <SelectContent>
+                    <SelectItem value="scheuren">Scheuren</SelectItem>
+                    <SelectItem value="loslaten">Loslaten</SelectItem>
+                    <SelectItem value="verkleuring">Verkleuring</SelectItem>
+                    <SelectItem value="vocht">Vocht</SelectItem>
+                    <SelectItem value="oneffenheden">Oneffenheden</SelectItem>
+                    <SelectItem value="communicatie">Communicatie</SelectItem>
+                    <SelectItem value="anders">Anders</SelectItem>
+                  </SelectContent>
+                </Select>
+              </div>
             </div>
             <div className="space-y-2">
               <label className="text-sm font-medium">Beschrijving</label>

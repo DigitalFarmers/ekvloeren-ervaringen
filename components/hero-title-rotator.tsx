@@ -15,20 +15,21 @@ export function HeroTitleRotator() {
     }, [])
 
     return (
-        <span className="relative inline-block min-w-[280px] text-left">
+        <span className="relative inline-flex justify-start min-w-[200px] sm:min-w-[400px] h-[1.2em] align-bottom overflow-hidden">
             {texts.map((text, i) => (
                 <span
                     key={i}
-                    className={`absolute left-0 top-0 transition-all duration-700 ease-in-out ${i === index
-                            ? "opacity-100 translate-y-0 scale-100"
-                            : "opacity-0 translate-y-4 scale-95 pointer-events-none"
+                    className={`absolute left-0 top-0 whitespace-nowrap transition-all duration-700 ease-in-out ${i === index
+                        ? "opacity-100 translate-y-0 scale-100"
+                        : "opacity-0 translate-y-4 scale-95 pointer-events-none"
                         }`}
-                    style={{ color: "hsl(var(--destructive))" }}
+                    style={{ color: "#dc2626" }} // Explicit safe red (red-600)
                 >
                     {text}
                 </span>
             ))}
-            <span className="invisible" aria-hidden="true">{texts[0]}</span>
+            {/* Invisible spacer to reserve width of the longest text */}
+            <span className="invisible whitespace-nowrap font-bold" aria-hidden="true">Erwin Kooistra</span>
         </span>
     )
 }
