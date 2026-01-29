@@ -22,12 +22,12 @@ export async function getAnalysisData() {
         // Count by category
         const categoryResult = await sql`
         SELECT 
-            COALESCE(defect_category, 'Onbekend') as defect_category, 
+            COALESCE(defect_category, 'Onbekend') as label, 
             COUNT(*) as count, 
             COALESCE(SUM(amount), 0) as total_amount
         FROM reports
-        WHERE status != 'rejected'
-        GROUP BY defect_category
+        WHERE status NOT IN ('rejected', 'duplicate')
+        GROUP BY COALESCE(defect_category, 'Onbekend')
         ORDER BY count DESC
     `
 
@@ -37,15 +37,15 @@ export async function getAnalysisData() {
             TO_CHAR(created_at, 'YYYY-MM') as month,
             COUNT(*) as count
         FROM reports
-        WHERE status != 'rejected'
-        AND created_at > NOW() - INTERVAL '6 months'
-        GROUP BY month
-        ORDER BY month ASC
+        WHERE status NOT IN ('rejected', 'duplicate')
+        AND created_at > NOW() - INTERVAL '1 year'
+        GROUP BY 1
+        ORDER BY 1 ASC
     `
 
         // Map to clean types
         const categoryStats: DefectStat[] = categoryResult.map((r) => ({
-            defect_category: r.defect_category as string,
+            defect_category: r.label as string,
             count: Number(r.count),
             total_amount: Number(r.total_amount),
         }))

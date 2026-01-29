@@ -27,7 +27,7 @@ export default function HomePage() {
         <div className="absolute inset-0 bg-gradient-to-b from-background via-background/90 to-background z-0" />
 
         <div className="relative z-10 mx-auto max-w-5xl px-4 sm:px-6 lg:px-8 text-center">
-          <h1 className="text-4xl font-bold tracking-tight text-zinc-900 dark:text-white mb-6 sm:text-6xl lg:text-7xl font-heading leading-tight animate-fade-in-up">
+          <h1 className="text-3xl font-bold tracking-tight text-zinc-900 dark:text-white mb-6 sm:text-6xl lg:text-7xl font-heading leading-tight animate-fade-in-up whitespace-nowrap">
             Geld kwijt aan <HeroTitleRotator />
           </h1>
 
@@ -298,8 +298,8 @@ export default function HomePage() {
           <div className="mt-16 border-t border-white/10 pt-8 sm:mt-20 lg:mt-24 text-center">
 
             <div className="mb-6 flex flex-col items-center gap-2 animate-fade-in-up">
-              <span className="text-2xl">🌱</span>
-              <p className="text-zinc-500 italic text-sm">Start small, grow big.</p>
+              <span className="text-2xl">🚜</span>
+              <p className="text-zinc-500 italic text-sm">Cultivating trust, harvesting justice.</p>
             </div>
 
             <a
