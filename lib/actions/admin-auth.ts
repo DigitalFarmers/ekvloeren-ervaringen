@@ -2,23 +2,25 @@
 
 import { cookies } from "next/headers"
 import { sql, type User } from "@/lib/db"
-import { createHash } from "crypto"
+import bcrypt from "bcryptjs"
 
-function hashPassword(password: string): string {
-  return createHash("sha256").update(password).digest("hex")
+export interface UserFromSession {
+  id: string
+  username: string
+  name: string | null
 }
 
 export async function adminLogin(username: string, password: string): Promise<{ success: boolean; message?: string }> {
   try {
-    const users = await sql`SELECT * FROM users WHERE username = ${username} LIMIT 1`
-    const user = users[0] as User | undefined
+    const users = await sql`SELECT * FROM admin_users WHERE username = ${username} AND is_active = true LIMIT 1`
+    const user = users[0] as any
 
     if (!user) {
       return { success: false, message: "Onjuiste gebruikersnaam of wachtwoord" }
     }
 
-    const hashedInput = hashPassword(password)
-    if (hashedInput === user.password_hash) {
+    const isValid = await bcrypt.compare(password, user.password_hash)
+    if (isValid) {
       const cookieStore = await cookies()
       cookieStore.set("admin_auth", "true", {
         httpOnly: true,
@@ -27,10 +29,13 @@ export async function adminLogin(username: string, password: string): Promise<{ 
         maxAge: 60 * 60 * 24, // 24 hours
       })
 
+      // Update last login
+      await sql`UPDATE admin_users SET last_login = NOW() WHERE id = ${user.id}`
+
       // Also store user info
       cookieStore.set("admin_user_id", user.id, { httpOnly: true, secure: true, sameSite: "strict" })
       cookieStore.set("admin_username", user.username, { httpOnly: true, secure: true, sameSite: "strict" })
-      cookieStore.set("admin_name", user.full_name, { httpOnly: true, secure: true, sameSite: "strict" })
+      cookieStore.set("admin_name", user.full_name || user.username, { httpOnly: true, secure: true, sameSite: "strict" })
 
       return { success: true }
     }

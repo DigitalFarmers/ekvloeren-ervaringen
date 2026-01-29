@@ -47,11 +47,11 @@ export async function adminLoginWithUser(
 ): Promise<{ success: boolean; message?: string; user?: { id: string; username: string; fullName: string | null } }> {
     try {
         // Get user from database
-        const users = await sql<AdminUser[]>`
+        const users = await sql`
       SELECT * FROM admin_users 
       WHERE username = ${username} AND is_active = true
       LIMIT 1
-    `
+    ` as AdminUser[]
 
         if (users.length === 0) {
             return { success: false, message: "Ongeldige gebruikersnaam of wachtwoord" }
@@ -112,11 +112,11 @@ export async function getCurrentAdminUser(): Promise<AdminUser | null> {
             return null
         }
 
-        const users = await sql<AdminUser[]>`
+        const users = await sql`
       SELECT * FROM admin_users 
       WHERE id = ${userId} AND is_active = true
       LIMIT 1
-    `
+    ` as AdminUser[]
 
         return users[0] || null
     } catch (error) {
@@ -127,15 +127,40 @@ export async function getCurrentAdminUser(): Promise<AdminUser | null> {
 
 export async function getAllAdminUsers(): Promise<AdminUser[]> {
     try {
-        const users = await sql<AdminUser[]>`
+        const users = await sql`
       SELECT id, username, email, full_name, created_at, last_login, is_active
       FROM admin_users
       ORDER BY created_at DESC
-    `
+    ` as AdminUser[]
 
         return users
     } catch (error) {
         console.error("Error fetching admin users:", error)
         return []
+    }
+}
+
+export async function updateAdminPassword(
+    userId: string,
+    newPassword: string
+): Promise<{ success: boolean; message: string }> {
+    try {
+        const session = await getCurrentAdminUser()
+        if (!session || (session.id !== userId)) {
+            return { success: false, message: "Ongeautoriseerd" }
+        }
+
+        const passwordHash = await bcrypt.hash(newPassword, 10)
+
+        await sql`
+            UPDATE admin_users 
+            SET password_hash = ${passwordHash} 
+            WHERE id = ${userId}
+        `
+
+        return { success: true, message: "Wachtwoord succesvol gewijzigd" }
+    } catch (error) {
+        console.error("Error updating admin password:", error)
+        return { success: false, message: "Er is een fout opgetreden" }
     }
 }

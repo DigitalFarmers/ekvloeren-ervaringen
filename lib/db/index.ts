@@ -17,6 +17,12 @@ export interface AdminUser {
   is_active: boolean
 }
 
+export type AdminRole = "admin" | "superadmin"
+
+export interface User extends AdminUser {
+  role: AdminRole
+}
+
 export interface Report {
   id: string
   created_at: Date

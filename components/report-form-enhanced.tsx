@@ -219,6 +219,7 @@ export function ReportFormEnhanced() {
                                     <SelectItem value="verkleuring">Verkleuring / Vlekken</SelectItem>
                                     <SelectItem value="vocht">Vochtproblemen / Blaasjes</SelectItem>
                                     <SelectItem value="oneffenheden">Oneffenheden / Bubbels</SelectItem>
+                                    <SelectItem value="voorrijkosten">Berekende voorrijkosten</SelectItem>
                                     <SelectItem value="communicatie">Alleen communicatie/service</SelectItem>
                                     <SelectItem value="anders">Anders</SelectItem>
                                 </SelectContent>

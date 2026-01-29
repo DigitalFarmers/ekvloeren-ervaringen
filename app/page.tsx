@@ -28,13 +28,13 @@ export default function HomePage() {
 
         <div className="relative z-10 mx-auto max-w-5xl px-4 sm:px-6 lg:px-8 text-center">
           <h1 className="text-4xl font-bold tracking-tight text-zinc-900 dark:text-white mb-6 sm:text-6xl lg:text-7xl font-heading leading-tight animate-fade-in-up">
-            Geld kwijt aan <span className="inline-block whitespace-nowrap"><HeroTitleRotator /></span>?
+            Geld kwijt aan <HeroTitleRotator />
           </h1>
 
           <ul className="flex flex-col md:flex-row justify-center gap-4 text-lg md:text-xl text-zinc-600 dark:text-zinc-300 mb-10 font-medium animate-fade-in-up animate-delay-100">
             {/* ... list items remain ... */}
             <li className="flex items-center justify-center gap-2">
-              <AlertCircle className="w-5 h-5 text-red-400" /> Voorschot betaald?
+              <AlertCircle className="w-5 h-5 text-red-400" /> Voorrijkosten betaald?
             </li>
             <li className="flex items-center justify-center gap-2">
               <XCircle className="w-5 h-5 text-red-400" /> Nooit komen opdagen?
@@ -67,11 +67,6 @@ export default function HomePage() {
             <Button asChild variant="outline" size="lg" className="border-zinc-300 text-zinc-700 hover:bg-zinc-100 hover:text-zinc-900 dark:border-zinc-700 dark:text-zinc-300 dark:hover:bg-zinc-800 dark:hover:text-white h-12 px-8">
               <Link href="/hoe-werkt-dit">
                 Bekijk hoe het werkt
-              </Link>
-            </Button>
-            <Button asChild variant="ghost" size="lg" className="text-zinc-500 hover:text-zinc-900 dark:text-zinc-400 dark:hover:text-white h-12 px-8">
-              <Link href="/admin/analyse">
-                Diepe Analyse
               </Link>
             </Button>
           </div>
@@ -304,7 +299,7 @@ export default function HomePage() {
 
             <div className="mb-6 flex flex-col items-center gap-2 animate-fade-in-up">
               <span className="text-2xl">🌱</span>
-              <p className="text-zinc-500 italic text-sm">Every report is a seed. Together they grow into clarity.</p>
+              <p className="text-zinc-500 italic text-sm">Start small, grow big.</p>
             </div>
 
             <a
@@ -315,7 +310,7 @@ export default function HomePage() {
             >
               <span className="group-hover:text-emerald-400 transition-colors font-bold">Digital Farmers</span>
               <span className="text-zinc-600">|</span>
-              <span className="text-zinc-400 group-hover:text-white transition-colors">Turning silence into signal.</span>
+              <span className="text-zinc-400 group-hover:text-white transition-colors">Start small grow big.</span>
             </a>
 
             <p className="text-xs leading-5 text-zinc-600 max-w-xl mx-auto mt-4">

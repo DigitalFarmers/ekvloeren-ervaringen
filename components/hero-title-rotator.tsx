@@ -4,7 +4,7 @@ import { useState, useEffect } from "react"
 
 export function HeroTitleRotator() {
     const [index, setIndex] = useState(0)
-    const texts = ["EK Vloeren", "Erwin Kooistra"]
+    const texts = ["EK Vloeren?", "Erwin Kooistra?"]
 
     useEffect(() => {
         const interval = setInterval(() => {
@@ -15,7 +15,7 @@ export function HeroTitleRotator() {
     }, [])
 
     return (
-        <span className="relative inline-flex justify-start min-w-[200px] sm:min-w-[400px] h-[1.2em] align-bottom overflow-hidden">
+        <span className="relative inline-flex justify-start h-[1.2em] align-bottom overflow-hidden">
             {texts.map((text, i) => (
                 <span
                     key={i}
@@ -29,7 +29,7 @@ export function HeroTitleRotator() {
                 </span>
             ))}
             {/* Invisible spacer to reserve width of the longest text */}
-            <span className="invisible whitespace-nowrap font-bold" aria-hidden="true">Erwin Kooistra</span>
+            <span className="invisible whitespace-nowrap font-bold tracking-tight" aria-hidden="true">Erwin Kooistra?</span>
         </span>
     )
 }

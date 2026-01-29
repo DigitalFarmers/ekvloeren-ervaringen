@@ -48,12 +48,17 @@ import {
   Loader2,
   Plus,
   BarChart,
+  KeyRound,
 } from "lucide-react"
 import Link from "next/link"
+import { updateAdminPassword } from "@/lib/actions/admin-users"
+import { toast } from "sonner"
+import { getAdminSession } from "@/lib/actions/admin-auth"
 
 interface ReportWithFiles extends Report {
   files: ReportFile[]
-  admin_name?: string
+  created_by_name?: string
+  updated_by_name?: string
 }
 
 const statusConfig: Record<ReportStatus, { label: string; color: string; icon: React.ReactNode }> = {
@@ -81,6 +86,9 @@ export function AdminDashboard() {
   const [showDuplicateDialog, setShowDuplicateDialog] = useState(false)
   const [showSettingsDialog, setShowSettingsDialog] = useState(false)
   const [showCreateDialog, setShowCreateDialog] = useState(false)
+  const [showPasswordDialog, setShowPasswordDialog] = useState(false)
+  const [newPassword, setNewPassword] = useState("")
+  const [adminUser, setAdminUser] = useState<any>(null)
   const [duplicateLinkId, setDuplicateLinkId] = useState("")
   const [approvedCount, setApprovedCount] = useState(0)
   const [counterAdjustment, setCounterAdjustmentState] = useState(0)
@@ -88,14 +96,16 @@ export function AdminDashboard() {
   const [isPending, startTransition] = useTransition()
 
   const loadData = async () => {
-    const [reportsData, approved, adjustment] = await Promise.all([
+    const [reportsData, approved, adjustment, session] = await Promise.all([
       getReports(statusFilter, searchQuery),
       getApprovedCount(),
       getCounterAdjustment(),
+      getAdminSession(),
     ])
     setReports(reportsData)
     setApprovedCount(approved)
     setCounterAdjustmentState(adjustment)
+    setAdminUser(session)
   }
 
   useEffect(() => {
@@ -153,6 +163,21 @@ export function AdminDashboard() {
     })
   }
 
+  const handlePasswordChange = async () => {
+    if (!adminUser?.id || !newPassword) return
+
+    startTransition(async () => {
+      const result = await updateAdminPassword(adminUser.id, newPassword)
+      if (result.success) {
+        toast.success(result.message)
+        setShowPasswordDialog(false)
+        setNewPassword("")
+      } else {
+        toast.error(result.message)
+      }
+    })
+  }
+
   const publicCounter = approvedCount + counterAdjustment
 
   return (
@@ -169,8 +194,12 @@ export function AdminDashboard() {
             <Button variant="outline" size="sm" asChild>
               <Link href="/admin/analyse">
                 <BarChart className="mr-2 h-4 w-4" />
-                Diepe Analyse
+                Statistieken
               </Link>
+            </Button>
+            <Button variant="outline" size="sm" onClick={() => setShowPasswordDialog(true)}>
+              <KeyRound className="mr-2 h-4 w-4" />
+              Wachtwoord
             </Button>
             <Button variant="outline" size="sm" onClick={() => setShowSettingsDialog(true)}>
               <Settings className="mr-2 h-4 w-4" />
@@ -242,9 +271,14 @@ export function AdminDashboard() {
                     </div>
                     <p className="mt-1 font-mono text-xs text-muted-foreground">
                       {report.id}
-                      {report.admin_name && (
+                      {report.created_by_name && (
+                        <span className="ml-2 rounded bg-emerald-50 dark:bg-emerald-900/30 px-1 py-0.5 font-sans text-[10px] font-bold uppercase tracking-wider text-emerald-600 dark:text-emerald-400">
+                          Gemaakt door: {report.created_by_name}
+                        </span>
+                      )}
+                      {report.updated_by_name && report.updated_by_name !== report.created_by_name && (
                         <span className="ml-2 rounded bg-zinc-100 dark:bg-zinc-800 px-1 py-0.5 font-sans text-[10px] font-bold uppercase tracking-wider text-zinc-500">
-                          Beheer door: {report.admin_name}
+                          Bewerkt door: {report.updated_by_name}
                         </span>
                       )}
                     </p>
@@ -300,11 +334,16 @@ export function AdminDashboard() {
                     {statusConfig[selectedReport.status].label}
                   </Badge>
                 </DialogTitle>
-                <DialogDescription className="flex items-center gap-2 font-mono text-xs">
+                <DialogDescription className="flex items-center gap-2 font-mono text-xs flex-wrap">
                   {selectedReport.id}
-                  {selectedReport.admin_name && (
+                  {selectedReport.created_by_name && (
+                    <span className="rounded bg-emerald-50 dark:bg-emerald-900/30 px-1.5 py-0.5 font-sans text-[10px] font-bold uppercase tracking-wider text-emerald-600 dark:text-emerald-400">
+                      Gemaakt door: {selectedReport.created_by_name}
+                    </span>
+                  )}
+                  {selectedReport.updated_by_name && (
                     <span className="rounded bg-zinc-100 dark:bg-zinc-800 px-1.5 py-0.5 font-sans text-[10px] font-bold uppercase tracking-wider text-zinc-500">
-                      Beheer: {selectedReport.admin_name}
+                      Laatst bijgewerkt: {selectedReport.updated_by_name}
                     </span>
                   )}
                 </DialogDescription>
@@ -631,6 +670,37 @@ export function AdminDashboard() {
               </Button>
             </DialogFooter>
           </form>
+        </DialogContent>
+      </Dialog>
+      {/* Password Change Dialog */}
+      <Dialog open={showPasswordDialog} onOpenChange={setShowPasswordDialog}>
+        <DialogContent>
+          <DialogHeader>
+            <DialogTitle>Wachtwoord wijzigen</DialogTitle>
+            <DialogDescription>
+              Stel een nieuw wachtwoord in voor jouw account ({adminUser?.username}).
+            </DialogDescription>
+          </DialogHeader>
+          <div className="space-y-4 py-4">
+            <div className="space-y-2">
+              <label className="text-sm font-medium">Nieuw wachtwoord</label>
+              <Input
+                type="password"
+                value={newPassword}
+                onChange={(e) => setNewPassword(e.target.value)}
+                placeholder="••••••••"
+              />
+            </div>
+          </div>
+          <DialogFooter>
+            <Button variant="outline" onClick={() => setShowPasswordDialog(false)}>
+              Annuleren
+            </Button>
+            <Button onClick={handlePasswordChange} disabled={isPending || !newPassword}>
+              {isPending ? <Loader2 className="mr-2 h-4 w-4 animate-spin" /> : null}
+              Wachtwoord bijwerken
+            </Button>
+          </DialogFooter>
         </DialogContent>
       </Dialog>
     </main >
