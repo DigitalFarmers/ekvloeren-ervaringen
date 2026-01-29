@@ -40,11 +40,21 @@ export default async function AnalysisPage() {
                     </div>
                 </div>
 
-                <div className="bg-zinc-950/50 rounded-xl border border-zinc-900 p-6">
-                    <Suspense fallback={<div className="text-zinc-500">Laden van grafieken...</div>}>
-                        <AdminAnalysisCharts categoryStats={data.categoryStats} trendStats={data.trendStats} />
-                    </Suspense>
-                </div>
+                {data.totalReportsCount === 0 ? (
+                    <div className="bg-zinc-950/50 rounded-xl border border-zinc-900 p-12 text-center">
+                        <p className="text-zinc-500">Er zijn nog geen meldingen in de database om te analyseren.</p>
+                    </div>
+                ) : data.categoryStats.length === 0 ? (
+                    <div className="bg-zinc-950/50 rounded-xl border border-zinc-900 p-12 text-center">
+                        <p className="text-zinc-500">Er zijn {data.totalReportsCount} meldingen, maar geen enkele heeft een status die wordt meegenomen in de analyse (bijv. alle zijn afgewezen of duplicaten).</p>
+                    </div>
+                ) : (
+                    <div className="bg-zinc-950/50 rounded-xl border border-zinc-900 p-6">
+                        <Suspense fallback={<div className="text-zinc-500">Laden van grafieken...</div>}>
+                            <AdminAnalysisCharts categoryStats={data.categoryStats} trendStats={data.trendStats} />
+                        </Suspense>
+                    </div>
+                )}
             </div>
         </div>
     )

@@ -34,13 +34,16 @@ export async function getAnalysisData() {
         // Recent trend (last 6 months)
         const trendResult = await sql`
         SELECT
-            TO_CHAR(created_at, 'YYYY-MM') as month,
+            month,
             COUNT(*) as count
-        FROM reports
+        FROM (
+            SELECT TO_CHAR(created_at, 'YYYY-MM') as month, status
+            FROM reports
+            WHERE created_at > NOW() - INTERVAL '1 year'
+        ) sub
         WHERE status NOT IN ('rejected', 'duplicate')
-        AND created_at > NOW() - INTERVAL '1 year'
-        GROUP BY 1
-        ORDER BY 1 ASC
+        GROUP BY month
+        ORDER BY month ASC
     `
 
         // Map to clean types
@@ -55,9 +58,13 @@ export async function getAnalysisData() {
             count: Number(r.count),
         }))
 
-        return { categoryStats, trendStats }
+        // Total count regardless of status for debugging/context
+        const totalReportsCountResult = await sql`SELECT COUNT(*) as count FROM reports`
+        const totalReportsCount = Number(totalReportsCountResult[0]?.count || 0)
+
+        return { categoryStats, trendStats, totalReportsCount }
     } catch (error) {
         console.error("Error fetching analysis data:", error)
-        return { categoryStats: [], trendStats: [] }
+        return { categoryStats: [], trendStats: [], totalReportsCount: 0 }
     }
 }
