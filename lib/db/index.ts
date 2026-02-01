@@ -1,6 +1,11 @@
 import { neon } from "@neondatabase/serverless"
 
-export const sql = neon(process.env.DATABASE_URL!)
+const databaseUrl = process.env.DATABASE_URL
+if (!databaseUrl) {
+  console.warn("DATABASE_URL is missing. Database operations will fail.")
+}
+
+export const sql = neon(databaseUrl || "")
 
 export const db = sql
 

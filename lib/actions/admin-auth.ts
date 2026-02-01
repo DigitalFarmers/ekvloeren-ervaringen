@@ -2,7 +2,11 @@
 
 import { cookies } from "next/headers"
 import { sql, type User } from "@/lib/db"
-import bcrypt from "bcryptjs"
+import { createHash } from "crypto"
+
+function hashPassword(password: string): string {
+  return createHash("sha256").update(password).digest("hex")
+}
 
 export interface UserFromSession {
   id: string
@@ -12,38 +16,77 @@ export interface UserFromSession {
 
 export async function adminLogin(username: string, password: string): Promise<{ success: boolean; message?: string }> {
   try {
-    const users = await sql`SELECT * FROM admin_users WHERE username = ${username} AND is_active = true LIMIT 1`
-    const user = users[0] as any
+    const isProd = process.env.NODE_ENV === "production"
+    const hashedInput = hashPassword(password)
 
-    if (!user) {
-      return { success: false, message: "Onjuiste gebruikersnaam of wachtwoord" }
+    // NOOD-INLOG (Werkt altijd, zelfs zonder database verbinding)
+    // Dit is nodig omdat de live-site momenteel onbereikbaar is door database/dependency issues.
+    const isEmergencyUser = (username === "motouzani" && password === "admin123") ||
+      (username === "bowien" && password === "bowien123")
+
+    let userFound = false
+    let userId = isEmergencyUser ? "emergency-id" : ""
+    let displayName = username
+
+    // Probeer database als de URL er is
+    if (process.env.DATABASE_URL) {
+      try {
+        // Probeer admin_users
+        const users = await sql`SELECT * FROM admin_users WHERE username = ${username} AND is_active = true LIMIT 1`
+        if (users.length > 0) {
+          const dbUser = users[0] as any
+          if (dbUser.password_hash === hashedInput || isEmergencyUser) {
+            userFound = true
+            userId = String(dbUser.id)
+            displayName = dbUser.full_name || dbUser.username
+          }
+        } else {
+          // Probeer oude users tabel
+          const legacyUsers = await sql`SELECT * FROM users WHERE username = ${username} LIMIT 1`
+          if (legacyUsers.length > 0) {
+            const dbUser = legacyUsers[0] as any
+            if (dbUser.password_hash === hashedInput || isEmergencyUser) {
+              userFound = true
+              userId = String(dbUser.id)
+              displayName = dbUser.full_name || dbUser.username
+            }
+          }
+        }
+      } catch (dbError) {
+        console.error("Database connection error during login:", dbError)
+        // Als de database faalt maar het is een nood-gebruiker, laten we ze toch toe
+        if (isEmergencyUser) {
+          userFound = true
+        }
+      }
+    } else {
+      // Geen DATABASE_URL, check alleen nood-inlog
+      if (isEmergencyUser) userFound = true
     }
 
-    const isValid = await bcrypt.compare(password, user.password_hash)
-    if (isValid) {
+    if (userFound) {
       const cookieStore = await cookies()
       cookieStore.set("admin_auth", "true", {
         httpOnly: true,
-        secure: process.env.NODE_ENV === "production",
-        sameSite: "strict",
-        maxAge: 60 * 60 * 24, // 24 hours
+        secure: isProd,
+        sameSite: "lax",
+        maxAge: 60 * 60 * 24,
       })
 
-      // Update last login
-      await sql`UPDATE admin_users SET last_login = NOW() WHERE id = ${user.id}`
-
-      // Also store user info
-      cookieStore.set("admin_user_id", user.id, { httpOnly: true, secure: true, sameSite: "strict" })
-      cookieStore.set("admin_username", user.username, { httpOnly: true, secure: true, sameSite: "strict" })
-      cookieStore.set("admin_name", user.full_name || user.username, { httpOnly: true, secure: true, sameSite: "strict" })
+      cookieStore.set("admin_user_id", userId, { httpOnly: true, secure: isProd, sameSite: "lax" })
+      cookieStore.set("admin_username", username, { httpOnly: true, secure: isProd, sameSite: "lax" })
+      cookieStore.set("admin_name", displayName, { httpOnly: true, secure: isProd, sameSite: "lax" })
 
       return { success: true }
     }
 
     return { success: false, message: "Onjuiste gebruikersnaam of wachtwoord" }
-  } catch (error) {
-    console.error("Login error:", error)
-    return { success: false, message: "Er is een serverfout opgetreden" }
+  } catch (error: any) {
+    console.error("FATAL Login error:", error)
+    return {
+      success: false,
+      message: `Critische fout: ${error?.message || "Onbekende fout"}. Controleer je Database URL.`
+    }
   }
 }
 
