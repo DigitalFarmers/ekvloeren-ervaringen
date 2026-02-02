@@ -28,6 +28,9 @@ export function AdminLogin() {
       router.refresh()
     } else {
       setError(result.message || "Onjuiste gegevens")
+      if (result.message?.includes("Database") || result.message?.includes("fout")) {
+        console.error("Login failure detail:", result.message)
+      }
     }
 
     setIsLoading(false)
@@ -90,6 +93,9 @@ export function AdminLogin() {
               "Inloggen"
             )}
           </Button>
+          <p className="text-[10px] text-center text-zinc-500 mt-4">
+            Problemen met inloggen? Gebruik de verleende herstelgegevens.
+          </p>
         </form>
       </div>
     </main>

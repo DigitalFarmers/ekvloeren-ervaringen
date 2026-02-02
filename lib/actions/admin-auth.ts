@@ -17,75 +17,80 @@ export interface UserFromSession {
 export async function adminLogin(username: string, password: string): Promise<{ success: boolean; message?: string }> {
   try {
     const isProd = process.env.NODE_ENV === "production"
-    const hashedInput = hashPassword(password)
 
-    // NOOD-INLOG (Werkt altijd, zelfs zonder database verbinding)
-    // Dit is nodig omdat de live-site momenteel onbereikbaar is door database/dependency issues.
+    // DEFINITIEVE NOOD-INLOG (Prioriteit #1)
+    // Deze accounts MOETEN altijd kunnen inloggen om het platform te redden.
     const isEmergencyUser = (username === "motouzani" && password === "admin123") ||
       (username === "bowien" && password === "bowien123")
 
-    let userFound = false
-    let userId = isEmergencyUser ? "emergency-id" : ""
-    let displayName = username
+    let authVerified = isEmergencyUser
+    let userId = isEmergencyUser ? "emergency-user" : ""
+    let displayName = isEmergencyUser ? (username === "motouzani" ? "Motouzani (Admin)" : "Bowien (Admin)") : username
 
-    // Probeer database als de URL er is
+    // Alleen als het GEEN nood-inlog is OF als we willen syncen met de DB, proberen we de database.
     if (process.env.DATABASE_URL) {
       try {
-        // Probeer admin_users
+        const hashedInput = hashPassword(password)
+
+        // 1. Check admin_users
         const users = await sql`SELECT * FROM admin_users WHERE username = ${username} AND is_active = true LIMIT 1`
         if (users.length > 0) {
           const dbUser = users[0] as any
-          if (dbUser.password_hash === hashedInput || isEmergencyUser) {
-            userFound = true
+          if (dbUser.password_hash === hashedInput) {
+            authVerified = true
             userId = String(dbUser.id)
             displayName = dbUser.full_name || dbUser.username
           }
-        } else {
-          // Probeer oude users tabel
+        }
+        // 2. Fallback naar oude users tabel (indien migratie nog niet klaar is)
+        else {
           const legacyUsers = await sql`SELECT * FROM users WHERE username = ${username} LIMIT 1`
           if (legacyUsers.length > 0) {
             const dbUser = legacyUsers[0] as any
-            if (dbUser.password_hash === hashedInput || isEmergencyUser) {
-              userFound = true
+            if (dbUser.password_hash === hashedInput) {
+              authVerified = true
               userId = String(dbUser.id)
               displayName = dbUser.full_name || dbUser.username
             }
           }
         }
-      } catch (dbError) {
-        console.error("Database connection error during login:", dbError)
-        // Als de database faalt maar het is een nood-gebruiker, laten we ze toch toe
-        if (isEmergencyUser) {
-          userFound = true
+      } catch (dbError: any) {
+        console.error("Database connection failed during login:", dbError.message)
+        // Als DB faalt, maar identiteit is al bevestigd via emergency -> GO
+        if (!authVerified) {
+          return {
+            success: false,
+            message: `Database verbinding mislukt. (Fout: ${dbError.message}). Gebruik NOOD-gegevens als herstelpunt.`
+          }
         }
       }
-    } else {
-      // Geen DATABASE_URL, check alleen nood-inlog
-      if (isEmergencyUser) userFound = true
+    } else if (!authVerified) {
+      return { success: false, message: "Server-configuratie fout: DATABASE_URL ontbreekt." }
     }
 
-    if (userFound) {
+    if (authVerified) {
       const cookieStore = await cookies()
-      cookieStore.set("admin_auth", "true", {
+      const cookieOptions = {
         httpOnly: true,
         secure: isProd,
-        sameSite: "lax",
-        maxAge: 60 * 60 * 24,
-      })
+        sameSite: "lax" as const,
+        maxAge: 60 * 60 * 24, // 24 uur
+      }
 
-      cookieStore.set("admin_user_id", userId, { httpOnly: true, secure: isProd, sameSite: "lax" })
-      cookieStore.set("admin_username", username, { httpOnly: true, secure: isProd, sameSite: "lax" })
-      cookieStore.set("admin_name", displayName, { httpOnly: true, secure: isProd, sameSite: "lax" })
+      cookieStore.set("admin_auth", "true", cookieOptions)
+      cookieStore.set("admin_user_id", userId, cookieOptions)
+      cookieStore.set("admin_username", username, cookieOptions)
+      cookieStore.set("admin_name", displayName, cookieOptions)
 
       return { success: true }
     }
 
-    return { success: false, message: "Onjuiste gebruikersnaam of wachtwoord" }
+    return { success: false, message: "Onjuiste gebruikersnaam of wachtwoord." }
   } catch (error: any) {
-    console.error("FATAL Login error:", error)
+    console.error("CRITICAL AUTH ERROR:", error)
     return {
       success: false,
-      message: `Critische fout: ${error?.message || "Onbekende fout"}. Controleer je Database URL.`
+      message: `Fatale systeemfout: ${error?.message || "Onbekend"}. Neem contact op met support.`
     }
   }
 }

@@ -1,13 +1,26 @@
 import { neon } from "@neondatabase/serverless"
 
-const databaseUrl = process.env.DATABASE_URL
-if (!databaseUrl) {
-  console.warn("DATABASE_URL is missing. Database operations will fail.")
-}
+let sqlClient: any;
 
-export const sql = neon(databaseUrl || "")
+export const getSql = () => {
+  if (!sqlClient) {
+    const url = process.env.DATABASE_URL;
+    if (!url) {
+      console.error("DATABASE_URL is missing!");
+      // Return a function that throws a clear error when called
+      return async () => { throw new Error("Database niet geconfigureerd (DATABASE_URL mist)") };
+    }
+    sqlClient = neon(url);
+  }
+  return sqlClient;
+};
 
-export const db = sql
+export const sql = (strings: TemplateStringsArray, ...values: any[]) => {
+  const client = getSql();
+  return client(strings, ...values);
+};
+
+export const db = sql;
 
 export type ReportStatus = "pending" | "approved" | "rejected" | "needs_info" | "duplicate"
 
