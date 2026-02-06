@@ -20,7 +20,7 @@ export async function createAdminUser(
 
         // Insert admin user
         const result = await sql`
-      INSERT INTO admin_users (username, email, password_hash, full_name)
+      INSERT INTO users (username, email, password_hash, full_name)
       VALUES (${username}, ${email}, ${passwordHash}, ${fullName || null})
       RETURNING id
     `
@@ -52,7 +52,7 @@ export async function adminLoginWithUser(
     try {
         // Get user from database
         const users = await sql`
-      SELECT * FROM admin_users 
+      SELECT * FROM users 
       WHERE username = ${username} AND is_active = true
       LIMIT 1
     ` as AdminUser[]
@@ -73,7 +73,7 @@ export async function adminLoginWithUser(
 
         // Update last login
         await sql`
-      UPDATE admin_users 
+      UPDATE users 
       SET last_login = NOW() 
       WHERE id = ${user.id}
     `
@@ -118,7 +118,7 @@ export async function getCurrentAdminUser(): Promise<AdminUser | null> {
         }
 
         const users = await sql`
-      SELECT * FROM admin_users 
+      SELECT * FROM users 
       WHERE id = ${userId} AND is_active = true
       LIMIT 1
     ` as AdminUser[]
@@ -134,7 +134,7 @@ export async function getAllAdminUsers(): Promise<AdminUser[]> {
     try {
         const users = await sql`
       SELECT id, username, email, full_name, created_at, last_login, is_active
-      FROM admin_users
+      FROM users
       ORDER BY created_at DESC
     ` as AdminUser[]
 
@@ -158,7 +158,7 @@ export async function updateAdminPassword(
         const passwordHash = hashPassword(newPassword)
 
         await sql`
-            UPDATE admin_users 
+            UPDATE users 
             SET password_hash = ${passwordHash} 
             WHERE id = ${userId}
         `

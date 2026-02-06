@@ -43,7 +43,7 @@ export function AdminLogin() {
           <div className="mx-auto mb-4 flex h-12 w-12 items-center justify-center rounded-full bg-zinc-100 dark:bg-zinc-800">
             <Lock className="h-6 w-6 text-zinc-600 dark:text-zinc-400" />
           </div>
-          <h1 className="text-2xl font-bold tracking-tight">Admin Toegang</h1>
+          <h1 className="text-2xl font-bold tracking-tight">Admin Toegang v2.0-SAFE</h1>
           <p className="mt-1 text-sm text-zinc-500">Log in om meldingen te beheren</p>
         </div>
 

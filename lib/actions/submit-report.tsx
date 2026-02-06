@@ -200,8 +200,8 @@ export async function getReports(status: ReportStatus | "all" = "all", query = "
     const baseQuery = sql`
       SELECT r.*, c.full_name as created_by_name, u.full_name as updated_by_name 
       FROM reports r 
-      LEFT JOIN admin_users c ON r.created_by_admin_id = c.id
-      LEFT JOIN admin_users u ON r.updated_by_admin_id = u.id
+      LEFT JOIN users c ON r.created_by_admin_id = c.id
+      LEFT JOIN users u ON r.updated_by_admin_id = u.id
     `
 
     if (status === "all") {
@@ -209,8 +209,8 @@ export async function getReports(status: ReportStatus | "all" = "all", query = "
         reports = await sql`
           SELECT r.*, c.full_name as created_by_name, u.full_name as updated_by_name 
           FROM reports r 
-          LEFT JOIN admin_users c ON r.created_by_admin_id = c.id
-          LEFT JOIN admin_users u ON r.updated_by_admin_id = u.id
+          LEFT JOIN users c ON r.created_by_admin_id = c.id
+          LEFT JOIN users u ON r.updated_by_admin_id = u.id
           WHERE (r.name ILIKE ${`%${query}%`} OR r.contact ILIKE ${`%${query}%`} OR r.city ILIKE ${`%${query}%`})
           ORDER BY r.created_at DESC
         `
@@ -218,8 +218,8 @@ export async function getReports(status: ReportStatus | "all" = "all", query = "
         reports = await sql`
           SELECT r.*, c.full_name as created_by_name, u.full_name as updated_by_name 
           FROM reports r 
-          LEFT JOIN admin_users c ON r.created_by_admin_id = c.id
-          LEFT JOIN admin_users u ON r.updated_by_admin_id = u.id
+          LEFT JOIN users c ON r.created_by_admin_id = c.id
+          LEFT JOIN users u ON r.updated_by_admin_id = u.id
           ORDER BY r.created_at DESC
         `
       }
@@ -228,8 +228,8 @@ export async function getReports(status: ReportStatus | "all" = "all", query = "
         reports = await sql`
           SELECT r.*, c.full_name as created_by_name, u.full_name as updated_by_name 
           FROM reports r 
-          LEFT JOIN admin_users c ON r.created_by_admin_id = c.id
-          LEFT JOIN admin_users u ON r.updated_by_admin_id = u.id
+          LEFT JOIN users c ON r.created_by_admin_id = c.id
+          LEFT JOIN users u ON r.updated_by_admin_id = u.id
           WHERE r.status = ${status} 
           AND (r.name ILIKE ${`%${query}%`} OR r.contact ILIKE ${`%${query}%`} OR r.city ILIKE ${`%${query}%`})
           ORDER BY r.created_at DESC
@@ -238,8 +238,8 @@ export async function getReports(status: ReportStatus | "all" = "all", query = "
         reports = await sql`
           SELECT r.*, c.full_name as created_by_name, u.full_name as updated_by_name 
           FROM reports r 
-          LEFT JOIN admin_users c ON r.created_by_admin_id = c.id
-          LEFT JOIN admin_users u ON r.updated_by_admin_id = u.id
+          LEFT JOIN users c ON r.created_by_admin_id = c.id
+          LEFT JOIN users u ON r.updated_by_admin_id = u.id
           WHERE r.status = ${status} 
           ORDER BY r.created_at DESC
         `
