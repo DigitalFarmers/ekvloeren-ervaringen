@@ -198,48 +198,38 @@ export async function getReports(status: ReportStatus | "all" = "all", query = "
   try {
     let reports
     const baseQuery = sql`
-      SELECT r.*, c.full_name as created_by_name, u.full_name as updated_by_name 
+      SELECT r.*, NULL as created_by_name, NULL as updated_by_name 
       FROM reports r 
-      LEFT JOIN users c ON r.created_by_admin_id = c.id
-      LEFT JOIN users u ON r.updated_by_admin_id = u.id
     `
 
     if (status === "all") {
       if (query) {
         reports = await sql`
-          SELECT r.*, c.full_name as created_by_name, u.full_name as updated_by_name 
+          SELECT r.*, NULL as created_by_name, NULL as updated_by_name 
           FROM reports r 
-          LEFT JOIN users c ON r.created_by_admin_id = c.id
-          LEFT JOIN users u ON r.updated_by_admin_id = u.id
           WHERE (r.name ILIKE ${`%${query}%`} OR r.contact ILIKE ${`%${query}%`} OR r.city ILIKE ${`%${query}%`})
           ORDER BY r.created_at DESC
         `
       } else {
         reports = await sql`
-          SELECT r.*, c.full_name as created_by_name, u.full_name as updated_by_name 
+          SELECT r.*, NULL as created_by_name, NULL as updated_by_name 
           FROM reports r 
-          LEFT JOIN users c ON r.created_by_admin_id = c.id
-          LEFT JOIN users u ON r.updated_by_admin_id = u.id
           ORDER BY r.created_at DESC
         `
       }
     } else {
       if (query) {
         reports = await sql`
-          SELECT r.*, c.full_name as created_by_name, u.full_name as updated_by_name 
+          SELECT r.*, NULL as created_by_name, NULL as updated_by_name 
           FROM reports r 
-          LEFT JOIN users c ON r.created_by_admin_id = c.id
-          LEFT JOIN users u ON r.updated_by_admin_id = u.id
           WHERE r.status = ${status} 
           AND (r.name ILIKE ${`%${query}%`} OR r.contact ILIKE ${`%${query}%`} OR r.city ILIKE ${`%${query}%`})
           ORDER BY r.created_at DESC
         `
       } else {
         reports = await sql`
-          SELECT r.*, c.full_name as created_by_name, u.full_name as updated_by_name 
+          SELECT r.*, NULL as created_by_name, NULL as updated_by_name 
           FROM reports r 
-          LEFT JOIN users c ON r.created_by_admin_id = c.id
-          LEFT JOIN users u ON r.updated_by_admin_id = u.id
           WHERE r.status = ${status} 
           ORDER BY r.created_at DESC
         `

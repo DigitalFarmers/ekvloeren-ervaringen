@@ -49,11 +49,22 @@ import {
   Plus,
   BarChart,
   KeyRound,
+  MoreVertical,
+  LogOut,
 } from "lucide-react"
 import Link from "next/link"
 import { updateAdminPassword } from "@/lib/actions/admin-users"
 import { toast } from "sonner"
-import { getAdminSession } from "@/lib/actions/admin-auth"
+import { getAdminSession, adminLogout } from "@/lib/actions/admin-auth"
+import { useRouter } from "next/navigation"
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuLabel,
+  DropdownMenuSeparator,
+  DropdownMenuTrigger,
+} from "@/components/ui/dropdown-menu"
 
 interface ReportWithFiles extends Report {
   files: ReportFile[]
@@ -94,6 +105,12 @@ export function AdminDashboard() {
   const [counterAdjustment, setCounterAdjustmentState] = useState(0)
   const [internalNotes, setInternalNotes] = useState("")
   const [isPending, startTransition] = useTransition()
+  const router = useRouter()
+
+  const handleLogout = async () => {
+    await adminLogout()
+    router.refresh()
+  }
 
   const loadData = async () => {
     const [reportsData, approved, adjustment, session] = await Promise.all([
@@ -191,25 +208,65 @@ export function AdminDashboard() {
             </p>
           </div>
           <div className="flex items-center gap-2">
-            <Button variant="outline" size="sm" asChild>
-              <Link href="/admin/analyse">
-                <BarChart className="mr-2 h-4 w-4" />
-                Statistieken
-              </Link>
-            </Button>
-            <Button variant="outline" size="sm" onClick={() => setShowPasswordDialog(true)}>
-              <KeyRound className="mr-2 h-4 w-4" />
-              Wachtwoord
-            </Button>
-            <Button variant="outline" size="sm" onClick={() => setShowSettingsDialog(true)}>
-              <Settings className="mr-2 h-4 w-4" />
-              Instellingen
-            </Button>
-            <Button size="sm" onClick={() => setShowCreateDialog(true)}>
-              <Plus className="mr-2 h-4 w-4" />
-              Nieuwe melding
-            </Button>
-            <AdminLogout />
+            {/* Desktop Navigation */}
+            <div className="hidden md:flex items-center gap-2">
+              <Button variant="outline" size="sm" asChild>
+                <Link href="/admin/analyse">
+                  <BarChart className="mr-2 h-4 w-4" />
+                  Statistieken
+                </Link>
+              </Button>
+              <Button variant="outline" size="sm" onClick={() => setShowPasswordDialog(true)}>
+                <KeyRound className="mr-2 h-4 w-4" />
+                Wachtwoord
+              </Button>
+              <Button variant="outline" size="sm" onClick={() => setShowSettingsDialog(true)}>
+                <Settings className="mr-2 h-4 w-4" />
+                Instellingen
+              </Button>
+              <Button size="sm" onClick={() => setShowCreateDialog(true)}>
+                <Plus className="mr-2 h-4 w-4" />
+                Nieuwe melding
+              </Button>
+              <AdminLogout />
+            </div>
+
+            {/* Mobile Navigation */}
+            <div className="flex md:hidden items-center gap-2">
+              <Button size="icon" variant="outline" onClick={() => setShowCreateDialog(true)}>
+                <Plus className="h-4 w-4" />
+              </Button>
+              <DropdownMenu>
+                <DropdownMenuTrigger asChild>
+                  <Button variant="ghost" size="icon">
+                    <MoreVertical className="h-5 w-5" />
+                  </Button>
+                </DropdownMenuTrigger>
+                <DropdownMenuContent align="end">
+                  <DropdownMenuLabel>Menu</DropdownMenuLabel>
+                  <DropdownMenuSeparator />
+                  <DropdownMenuItem asChild>
+                    <Link href="/admin/analyse" className="flex items-center w-full cursor-pointer">
+                      <BarChart className="mr-2 h-4 w-4" />
+                      Statistieken
+                    </Link>
+                  </DropdownMenuItem>
+                  <DropdownMenuItem onClick={() => setShowPasswordDialog(true)} className="cursor-pointer">
+                    <KeyRound className="mr-2 h-4 w-4" />
+                    Wachtwoord
+                  </DropdownMenuItem>
+                  <DropdownMenuItem onClick={() => setShowSettingsDialog(true)} className="cursor-pointer">
+                    <Settings className="mr-2 h-4 w-4" />
+                    Instellingen
+                  </DropdownMenuItem>
+                  <DropdownMenuSeparator />
+                  <DropdownMenuItem onClick={handleLogout} className="text-red-600 cursor-pointer">
+                    <LogOut className="mr-2 h-4 w-4" />
+                    Uitloggen
+                  </DropdownMenuItem>
+                </DropdownMenuContent>
+              </DropdownMenu>
+            </div>
           </div>
         </div>
       </div>
