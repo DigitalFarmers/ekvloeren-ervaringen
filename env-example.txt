@@ -1,8 +1,13 @@
 # Database (Neon PostgreSQL)
-DATABASE_URL=postgresql://neondb_owner:npg_CRlU5J8ipvyT@ep-wispy-lab-ageuxc3j-pooler.c-2.eu-central-1.aws.neon.tech/neondb?sslmode=require&channel_binding=require
+DATABASE_URL=postgresql://user:password@host/db?sslmode=require
 
-# Admin Password
-ADMIN_PASSWORD=your_secure_admin_password_here
+# Admin-sessie (verplicht): willekeurig geheim van minstens 32 tekens, bv. `openssl rand -hex 32`.
+# Ontbreekt het, dan staat de admin-login dicht.
+ADMIN_SESSION_SECRET=
+
+# Nood-login (optioneel): beide leeg = uit. Hash maken met: node scripts/hash-admin-password.mjs '<wachtwoord>'
+ADMIN_EMERGENCY_USERNAME=
+ADMIN_EMERGENCY_PASSWORD_HASH=
 
 # Email (optional)
 RESEND_API_KEY=your_resend_api_key_here

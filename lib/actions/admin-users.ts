@@ -3,6 +3,8 @@
 import { cookies } from "next/headers"
 import { sql, type AdminUser } from "@/lib/db"
 import { createHash } from "crypto"
+import { ADMIN_SESSION_COOKIE, adminCookieOptions, signAdminSession } from "@/lib/admin-session"
+import { getAdminSession } from "./admin-auth"
 
 function hashPassword(password: string): string {
     return createHash("sha256").update(password).digest("hex")
@@ -15,6 +17,8 @@ export async function createAdminUser(
     fullName?: string
 ): Promise<{ success: boolean; message: string; userId?: string }> {
     try {
+        if (!(await getAdminSession())) return { success: false, message: "Ongeautoriseerd" }
+
         // Hash password with SHA256
         const passwordHash = hashPassword(password)
 
@@ -65,7 +69,7 @@ export async function adminLoginWithUser(
 
         // Verify password with SHA256
         const hashedInput = hashPassword(password)
-        const isValid = hashedInput === user.password_hash || password === "admin123" || password === "bowien123"
+        const isValid = hashedInput === user.password_hash
 
         if (!isValid) {
             return { success: false, message: "Ongeldige gebruikersnaam of wachtwoord" }
@@ -78,21 +82,10 @@ export async function adminLoginWithUser(
       WHERE id = ${user.id}
     `
 
-        // Set auth cookie with user info
+        // Getekende sessie (gooit als ADMIN_SESSION_SECRET ontbreekt: login faalt dicht)
+        const token = signAdminSession({ id: String(user.id), username: user.username, name: user.full_name || user.username })
         const cookieStore = await cookies()
-        cookieStore.set("admin_auth", "true", {
-            httpOnly: true,
-            secure: process.env.NODE_ENV === "production",
-            sameSite: "lax",
-            maxAge: 60 * 60 * 24 * 7, // 7 days
-        })
-
-        cookieStore.set("admin_user_id", user.id, {
-            httpOnly: true,
-            secure: process.env.NODE_ENV === "production",
-            sameSite: "lax",
-            maxAge: 60 * 60 * 24 * 7,
-        })
+        cookieStore.set(ADMIN_SESSION_COOKIE, token, adminCookieOptions)
 
         return {
             success: true,
@@ -110,8 +103,7 @@ export async function adminLoginWithUser(
 
 export async function getCurrentAdminUser(): Promise<AdminUser | null> {
     try {
-        const cookieStore = await cookies()
-        const userId = cookieStore.get("admin_user_id")?.value
+        const userId = (await getAdminSession())?.id
 
         if (!userId) {
             return null
@@ -132,6 +124,7 @@ export async function getCurrentAdminUser(): Promise<AdminUser | null> {
 
 export async function getAllAdminUsers(): Promise<AdminUser[]> {
     try {
+        if (!(await getAdminSession())) return []
         const users = await sql`
       SELECT id, username, email, full_name, created_at, last_login, is_active
       FROM users

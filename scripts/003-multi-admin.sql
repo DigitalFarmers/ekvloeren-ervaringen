@@ -12,9 +12,7 @@ CREATE TABLE IF NOT EXISTS users (
 ALTER TABLE reports ADD COLUMN IF NOT EXISTS admin_id UUID REFERENCES users(id);
 
 -- Insert initial users
--- Passwords: 
--- motouzani: admin123
--- bowien: bowien123
+-- Deze startwachtwoorden zijn publiek gelekt en gelden als verbrand: wijzig ze meteen.
 INSERT INTO users (username, password_hash, full_name, role)
 VALUES 
 ('motouzani', '240be518fabd2724ddb6f04eeb1da5967448d7e831c08c8fa822809f74c720a9', 'Admin', 'superadmin')

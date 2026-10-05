@@ -196,6 +196,8 @@ export async function createManualReport(data: any): Promise<void> {
 
 export async function getReports(status: ReportStatus | "all" = "all", query = ""): Promise<any[]> {
   try {
+    // Publieke pagina's vragen enkel "approved"; al de rest is admin-only.
+    if (status !== "approved" && !(await getAdminSession())) return []
     let reports
     const baseQuery = sql`
       SELECT r.*, NULL as created_by_name, NULL as updated_by_name 
@@ -238,7 +240,7 @@ export async function getReports(status: ReportStatus | "all" = "all", query = "
 
     // Enrich with files
     const reportsWithFiles = await Promise.all(
-      reports.map(async (report) => {
+      reports.map(async (report: any) => {
         const files = await sql`SELECT * FROM report_files WHERE report_id = ${report.id}`
         return { ...report, files }
       }),
@@ -295,6 +297,9 @@ export async function updateReportNotes(reportId: string, notes: string): Promis
 
 export async function deleteReport(reportId: string): Promise<void> {
   try {
+    const session = await getAdminSession()
+    if (!session) throw new Error("Unauthorized")
+
     // Delete files from storage would go here ideally
     await sql`DELETE FROM report_files WHERE report_id = ${reportId}`
     await sql`DELETE FROM reports WHERE id = ${reportId}`
@@ -326,6 +331,9 @@ export async function getCounterAdjustment(): Promise<number> {
 
 export async function setCounterAdjustment(value: number): Promise<void> {
   try {
+    const session = await getAdminSession()
+    if (!session) throw new Error("Unauthorized")
+
     // Create settings table if not exists (simple safety)
     await sql`
       CREATE TABLE IF NOT EXISTS settings (

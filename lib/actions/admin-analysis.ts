@@ -47,13 +47,13 @@ export async function getAnalysisData() {
     `
 
         // Map to clean types
-        const categoryStats: DefectStat[] = categoryResult.map((r) => ({
+        const categoryStats: DefectStat[] = categoryResult.map((r: any) => ({
             defect_category: r.label as string,
             count: Number(r.count),
             total_amount: Number(r.total_amount),
         }))
 
-        const trendStats: TrendStat[] = trendResult.map((r) => ({
+        const trendStats: TrendStat[] = trendResult.map((r: any) => ({
             month: r.month as string,
             count: Number(r.count),
         }))

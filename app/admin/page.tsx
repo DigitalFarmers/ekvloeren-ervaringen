@@ -1,5 +1,5 @@
 import type { Metadata } from "next"
-import { cookies } from "next/headers"
+import { getAdminSession } from "@/lib/actions/admin-auth"
 import { AdminLogin } from "@/components/admin-login"
 import { AdminDashboard } from "@/components/admin-dashboard"
 
@@ -9,10 +9,7 @@ export const metadata: Metadata = {
 }
 
 export default async function AdminPage() {
-  const cookieStore = await cookies()
-  const isAuthenticated = cookieStore.get("admin_auth")?.value === "true"
-
-  if (!isAuthenticated) {
+  if (!(await getAdminSession())) {
     return <AdminLogin />
   }
 

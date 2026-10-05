@@ -1,8 +1,17 @@
 "use server"
 
 import { cookies } from "next/headers"
-import { sql, type User } from "@/lib/db"
+import { sql } from "@/lib/db"
 import { createHash } from "crypto"
+import {
+  ADMIN_SESSION_COOKIE,
+  AdminConfigError,
+  adminCookieOptions,
+  checkEmergencyLogin,
+  signAdminSession,
+  verifyAdminSession,
+  type AdminSession,
+} from "@/lib/admin-session"
 
 function hashPassword(password: string): string {
   return createHash("sha256").update(password).digest("hex")
@@ -14,121 +23,64 @@ export interface UserFromSession {
   name: string | null
 }
 
+// Oude, ongetekende koekjes: bij login en logout opruimen.
+const LEGACY_COOKIES = ["admin_auth", "admin_user_id", "admin_username", "admin_name"]
+
+async function startSession(session: AdminSession): Promise<void> {
+  const token = signAdminSession(session) // gooit AdminConfigError zonder geheim
+  const cookieStore = await cookies()
+  for (const name of LEGACY_COOKIES) cookieStore.delete(name)
+  cookieStore.set(ADMIN_SESSION_COOKIE, token, adminCookieOptions)
+}
+
 export async function adminLogin(username: string, password: string): Promise<{ success: boolean; message?: string }> {
   try {
-    const isProd = process.env.NODE_ENV === "production"
+    // Faal dicht als het sessiegeheim ontbreekt, nog voor we iets nakijken.
+    signAdminSession({ id: "probe", username: "probe", name: "probe" })
 
-    // DEFINITIEVE NOOD-INLOG (Prioriteit #1)
-    // Deze accounts MOETEN altijd kunnen inloggen om het platform te redden.
-    const isEmergencyUser = (username === "motouzani" && password === "admin123") ||
-      (username === "bowien" && password === "bowien123")
-
-    // Als het een emergency user is, login DIRECT zonder database check
-    if (isEmergencyUser) {
-      const cookieStore = await cookies()
-      const cookieOptions = {
-        httpOnly: true,
-        secure: isProd,
-        sameSite: "lax" as const,
-        maxAge: 60 * 60 * 24, // 24 uur
-      }
-
-      const displayName = username === "motouzani" ? "Motouzani (Admin)" : "Bowien (Admin)"
-
-      cookieStore.set("admin_auth", "true", cookieOptions)
-      cookieStore.set("admin_user_id", "emergency-user", cookieOptions)
-      cookieStore.set("admin_username", username, cookieOptions)
-      cookieStore.set("admin_name", displayName, cookieOptions)
-
-      console.log(`✅ Emergency login successful for: ${username}`)
+    if (checkEmergencyLogin(username, password)) {
+      await startSession({ id: "emergency-user", username, name: `${username} (nood-login)` })
       return { success: true }
     }
 
-    // Voor niet-emergency users: check database
     if (!process.env.DATABASE_URL) {
-      return { success: false, message: "Server-configuratie fout: DATABASE_URL ontbreekt. Gebruik emergency login." }
+      return { success: false, message: "Server-configuratie fout: DATABASE_URL ontbreekt." }
     }
 
-    try {
-      const hashedInput = hashPassword(password)
+    const hashedInput = hashPassword(password)
+    // 1. admin_users, 2. fallback naar de oude users-tabel (zelfde volgorde als voorheen)
+    const users = await sql`SELECT * FROM admin_users WHERE username = ${username} AND is_active = true LIMIT 1`
+    const legacyUsers = await sql`SELECT * FROM users WHERE username = ${username} LIMIT 1`
+    const dbUser = [users[0], legacyUsers[0]].find((u: any) => u && u.password_hash === hashedInput) as any
 
-      // 1. Check admin_users
-      const users = await sql`SELECT * FROM admin_users WHERE username = ${username} AND is_active = true LIMIT 1`
-      if (users.length > 0) {
-        const dbUser = users[0] as any
-        if (dbUser.password_hash === hashedInput) {
-          const cookieStore = await cookies()
-          const cookieOptions = {
-            httpOnly: true,
-            secure: isProd,
-            sameSite: "lax" as const,
-            maxAge: 60 * 60 * 24,
-          }
-
-          cookieStore.set("admin_auth", "true", cookieOptions)
-          cookieStore.set("admin_user_id", String(dbUser.id), cookieOptions)
-          cookieStore.set("admin_username", dbUser.username, cookieOptions)
-          cookieStore.set("admin_name", dbUser.full_name || dbUser.username, cookieOptions)
-
-          return { success: true }
-        }
-      }
-
-      // 2. Fallback naar oude users tabel
-      const legacyUsers = await sql`SELECT * FROM users WHERE username = ${username} LIMIT 1`
-      if (legacyUsers.length > 0) {
-        const dbUser = legacyUsers[0] as any
-        if (dbUser.password_hash === hashedInput) {
-          const cookieStore = await cookies()
-          const cookieOptions = {
-            httpOnly: true,
-            secure: isProd,
-            sameSite: "lax" as const,
-            maxAge: 60 * 60 * 24,
-          }
-
-          cookieStore.set("admin_auth", "true", cookieOptions)
-          cookieStore.set("admin_user_id", String(dbUser.id), cookieOptions)
-          cookieStore.set("admin_username", dbUser.username, cookieOptions)
-          cookieStore.set("admin_name", dbUser.full_name || dbUser.username, cookieOptions)
-
-          return { success: true }
-        }
-      }
-    } catch (dbError: any) {
-      console.error("Database error during login:", dbError.message)
-      return {
-        success: false,
-        message: `Database fout: ${dbError.message}. Probeer emergency login: motouzani/admin123 of bowien/bowien123`
-      }
+    if (dbUser) {
+      await startSession({
+        id: String(dbUser.id),
+        username: dbUser.username,
+        name: dbUser.full_name || dbUser.username,
+      })
+      return { success: true }
     }
 
     return { success: false, message: "Onjuiste gebruikersnaam of wachtwoord." }
   } catch (error: any) {
-    console.error("CRITICAL AUTH ERROR:", error)
-    return {
-      success: false,
-      message: `Systeemfout: ${error?.message || "Onbekend"}. Probeer emergency login: motouzani/admin123`
+    if (error instanceof AdminConfigError) {
+      console.error("Admin-login dicht:", error.message)
+      return { success: false, message: "Admin-login staat dicht: ADMIN_SESSION_SECRET is niet ingesteld op de server." }
     }
+    console.error("Admin-login fout:", error?.message)
+    return { success: false, message: "Er ging iets mis bij het inloggen. Probeer het later opnieuw." }
   }
 }
 
 export async function adminLogout(): Promise<void> {
   const cookieStore = await cookies()
-  cookieStore.delete("admin_auth")
-  cookieStore.delete("admin_user_id")
-  cookieStore.delete("admin_username")
-  cookieStore.delete("admin_name")
+  cookieStore.delete(ADMIN_SESSION_COOKIE)
+  for (const name of LEGACY_COOKIES) cookieStore.delete(name)
 }
 
-export async function getAdminSession() {
+// De enige plek waar de admin-sessie gelezen wordt. Elke admin-pagina en admin-actie roept dit aan.
+export async function getAdminSession(): Promise<AdminSession | null> {
   const cookieStore = await cookies()
-  const auth = cookieStore.get("admin_auth")?.value === "true"
-  if (!auth) return null
-
-  return {
-    id: cookieStore.get("admin_user_id")?.value,
-    username: cookieStore.get("admin_username")?.value,
-    name: cookieStore.get("admin_name")?.value,
-  }
+  return verifyAdminSession(cookieStore.get(ADMIN_SESSION_COOKIE)?.value)
 }
