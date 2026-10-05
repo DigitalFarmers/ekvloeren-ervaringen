@@ -2,7 +2,7 @@
 
 import { cookies } from "next/headers"
 import { sql } from "@/lib/db"
-import { createHash } from "crypto"
+import { createHash, timingSafeEqual } from "crypto"
 import {
   ADMIN_SESSION_COOKIE,
   AdminConfigError,
@@ -15,6 +15,11 @@ import {
 
 function hashPassword(password: string): string {
   return createHash("sha256").update(password).digest("hex")
+}
+
+function sameHash(stored: unknown, given: string): boolean {
+  if (typeof stored !== "string" || stored.length !== given.length) return false
+  return timingSafeEqual(Buffer.from(stored), Buffer.from(given))
 }
 
 export interface UserFromSession {
@@ -50,8 +55,8 @@ export async function adminLogin(username: string, password: string): Promise<{ 
     const hashedInput = hashPassword(password)
     // 1. admin_users, 2. fallback naar de oude users-tabel (zelfde volgorde als voorheen)
     const users = await sql`SELECT * FROM admin_users WHERE username = ${username} AND is_active = true LIMIT 1`
-    const legacyUsers = await sql`SELECT * FROM users WHERE username = ${username} LIMIT 1`
-    const dbUser = [users[0], legacyUsers[0]].find((u: any) => u && u.password_hash === hashedInput) as any
+    const legacyUsers = await sql`SELECT * FROM users WHERE username = ${username} AND is_active = true LIMIT 1`
+    const dbUser = [users[0], legacyUsers[0]].find((u: any) => u && sameHash(u.password_hash, hashedInput)) as any
 
     if (dbUser) {
       await startSession({
