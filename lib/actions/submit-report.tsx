@@ -6,6 +6,7 @@ import { sql, type Report, type ReportFile, type ReportStatus, type AdminUser } 
 import { reportSchema, checkForModeration } from "@/lib/validations/report"
 import { put } from "@vercel/blob"
 import { getAdminSession } from "./admin-auth"
+import { toPublicReport, type PublicReport } from "@/lib/public-report"
 
 export interface SubmitReportResult {
   success: boolean
@@ -194,10 +195,24 @@ export async function createManualReport(data: any): Promise<void> {
   }
 }
 
+// Publieke pagina's: goedgekeurde meldingen, enkel de velden die de kaart toont.
+// Leest geen koekjes, zodat /ervaringen statisch (ISR) blijft.
+export async function getPublicReports(): Promise<PublicReport[]> {
+  try {
+    const reports = await sql`
+      SELECT * FROM reports WHERE status = 'approved' ORDER BY created_at DESC
+    `
+    return (reports as Report[]).map(toPublicReport)
+  } catch (error) {
+    console.error("Error fetching public reports:", error)
+    return []
+  }
+}
+
 export async function getReports(status: ReportStatus | "all" = "all", query = ""): Promise<any[]> {
   try {
-    // Publieke pagina's vragen enkel "approved"; al de rest is admin-only.
-    if (status !== "approved" && !(await getAdminSession())) return []
+    // Volledige rijen (contact, notities, bestanden) enkel voor admins.
+    if (!(await getAdminSession())) return []
     let reports
     const baseQuery = sql`
       SELECT r.*, NULL as created_by_name, NULL as updated_by_name 

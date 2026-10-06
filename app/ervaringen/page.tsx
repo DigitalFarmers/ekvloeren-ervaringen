@@ -3,8 +3,7 @@ import Link from "next/link"
 import { ArrowLeft, Filter } from "lucide-react"
 import { Button } from "@/components/ui/button"
 import { ReportCard } from "@/components/report-card"
-import { getReports } from "@/lib/actions/submit-report"
-import type { Report } from "@/lib/db"
+import { getPublicReports } from "@/lib/actions/submit-report"
 
 export const metadata: Metadata = {
     title: "Geverifieerde Ervaringen | EK Vloeren",
@@ -16,7 +15,7 @@ export const revalidate = 3600
 
 export default async function ErvaringenPage() {
     // Fetch approved reports
-    const reports = await getReports("approved") as Report[]
+    const reports = await getPublicReports()
 
     // Calculate total damage
     const totalAmount = reports.reduce((acc, report) => {

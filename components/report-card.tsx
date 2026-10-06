@@ -1,12 +1,12 @@
 import { MapPin, Calendar, CreditCard, CheckCircle2, ShieldCheck, Clock, AlertTriangle } from "lucide-react"
 import { Badge } from "@/components/ui/badge"
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from "@/components/ui/card"
-import type { Report } from "@/lib/db"
+import type { PublicReport } from "@/lib/public-report"
 import { format } from "date-fns"
 import { nl } from "date-fns/locale"
 
 interface ReportCardProps {
-    report: Report
+    report: PublicReport
 }
 
 export function ReportCard({ report }: ReportCardProps) {

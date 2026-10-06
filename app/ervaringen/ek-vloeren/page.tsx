@@ -3,8 +3,7 @@ import Link from "next/link"
 import { ArrowLeft, ShieldAlert, TrendingUp } from "lucide-react"
 import { Button } from "@/components/ui/button"
 import { ReportCard } from "@/components/report-card"
-import { getReports } from "@/lib/actions/submit-report"
-import type { Report } from "@/lib/db"
+import { getPublicReports } from "@/lib/actions/submit-report"
 
 export const metadata: Metadata = {
     title: "Ervaringen met EK Vloeren | Klachten & Meldingen",
@@ -15,7 +14,7 @@ export const metadata: Metadata = {
 export const revalidate = 3600
 
 export default async function EkVloerenPage() {
-    const reports = await getReports("approved") as Report[]
+    const reports = await getPublicReports()
 
     // Filter specifically for this brand if we had multiple, but for now it's just one.
     // In a multi-brand future, we'd filter here.
